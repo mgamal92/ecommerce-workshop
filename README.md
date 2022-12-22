@@ -53,3 +53,13 @@
   - Products
     - List/Show/Create/Update
     - Can be importable
+
+## Development
+- Laravel 9
+- MySQL
+- Docker
+- API Documentation
+
+## CI/CD
+- Code Style with php-cs-fixer
+- Static Analysis by Psalm
