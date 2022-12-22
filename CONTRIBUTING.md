@@ -1,4 +1,4 @@
-As we work as a team, so we should follow some guides and patterns to meet the code standards and make readable and maintainable.
+As we work as a team, so we should follow some guidelines to meet the code standards and make readable and maintainable.
 
 ## Setup Process
 _will be updated soon!_
