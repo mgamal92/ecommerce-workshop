@@ -53,3 +53,8 @@
   - Products
     - List/Show/Create/Update
     - Can be importable
+    
+    
+## Contributing
+
+Follow the [contributing guidelines](CONTRIBUTING.md).
