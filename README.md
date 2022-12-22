@@ -1,4 +1,4 @@
-# eCommerce-workshop
+# eCommerce Application Workshop
 
 - Authentication
   - Login/Register
@@ -25,7 +25,7 @@
   - Filter
   - Hisory
 
-## Administration Section: 
+### Administration Section: 
 
 - Manage 
   - Members
@@ -46,7 +46,7 @@
     - Member registered in period to specific time
     - Orders created in period to specific time
   
-## Editor Section: 
+### Editor Section: 
   
   - Categories
     - List/Show/Create/Update
@@ -55,6 +55,6 @@
     - Can be importable
     
     
-## Contributing
+# Contributing
 
 Follow the [contributing guidelines](CONTRIBUTING.md).
