@@ -20,15 +20,21 @@
   - Pay with: 
     - Credit Cart
     - Vodafone Cash
+- Invoice
+  - List/Show
 - Orders
   - Search
   - Filter
   - Hisory
+- Customers
+  - Profile
+  - Account Setting
+  - Address
 
 ### Administration Section: 
 
 - Manage 
-  - Members
+  - Customers
     - List/Show/Create/Update/Delete
   - Staff
     - List/Show/Create/Update/Delete
