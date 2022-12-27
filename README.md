@@ -55,7 +55,7 @@
   
   - Products with Cache
     - List/Show/Create/Update/Delete
-    - Can be importable as CSV
+    - Could be importable as CSV
   
   - Orders
       - List/Show
@@ -74,7 +74,7 @@
   - List/Show/Create/Update
 - Products
   - List/Show/Create/Update
-  - Can be importable
+  - Could be importable
 
 # Contributing
 
