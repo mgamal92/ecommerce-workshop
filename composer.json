@@ -6,6 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "friendsofphp/php-cs-fixer": "^3.13",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
@@ -18,7 +19,9 @@
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10",
-        "spatie/laravel-ignition": "^1.0"
+        "psalm/plugin-laravel": "^2.0",
+        "spatie/laravel-ignition": "^1.0",
+        "vimeo/psalm": "^5.4"
     },
     "autoload": {
         "psr-4": {
@@ -45,7 +48,10 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "test": "vendor/bin/phpunit",
+        "check-style": "vendor/bin/php-cs-fixer fix app",
+        "static-analyze-code": "vendor/bin/psalm --show-info=true --no-cache --shepherd --stats"
     },
     "extra": {
         "laravel": {
