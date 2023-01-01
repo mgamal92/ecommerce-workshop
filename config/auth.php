@@ -40,6 +40,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'user',
+        ],
+        'editor' => [
+            'driver' => 'sanctum',
+            'provider' => 'user',
+        ],
     ],
 
     /*
@@ -65,10 +73,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+    // 'users' => [
+    //     'driver' => 'database',
+    //     'table' => 'users',
+    // ],
     ],
 
     /*
