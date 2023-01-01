@@ -1,6 +1,6 @@
 # eCommerce Application Workshop
 
-- Authentication with Sanctum
+- Authentication with Sanctum _[The auth roues placed in routes/auth.php]_
   - Login/Register with Welcome Email
   - Forget Password
 
