@@ -40,3 +40,9 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: composer test
+
+    - name: Check Code Style
+      run: composer check-style
+
+    - name: Analyze Code
+      run: composer static-analyze-code
