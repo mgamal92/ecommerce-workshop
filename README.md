@@ -3,6 +3,11 @@
 - Authentication with Sanctum _[The auth roues placed in routes/auth.php]_
   - Login/Register with Welcome Email
   - Forget Password
+  
+- Categories
+  - List
+  - Show
+  - List Category Products
 
 - Products
   - List
@@ -10,11 +15,6 @@
   - Filter
   - Search
   
-- Categories
-  - List
-  - Show
-  - List Category Products
-
 - Cart
   - Add/Delete to Cart
   - Send offers to abandon cart products
