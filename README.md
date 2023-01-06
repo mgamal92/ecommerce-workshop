@@ -9,7 +9,7 @@
   - Show
   - List Category Products
 
-- Products
+- Products with Cache
   - List
   - Show
   - Filter
@@ -53,7 +53,7 @@
   - Categories
     - List/Show/Create/Update/Delete
   
-  - Products with Cache
+  - Products
     - List/Show/Create/Update/Delete
     - Could be importable as CSV
   
