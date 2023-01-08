@@ -34,7 +34,6 @@
     - Get the latest orders
     - Search
     - Filter
-    - History
 
 - Customers
   - Profile
