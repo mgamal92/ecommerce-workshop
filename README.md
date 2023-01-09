@@ -43,58 +43,64 @@
 
 ### Administration Section: 
 
-- Manage 
-  - Customers
-    - List customers 
-    - Show a customer
-    - Create a customer
-    - Update a customer 
-    - Delete a customer
-  
-  - Staff
-    - List staff members
-    - Show a staff member
-    - Create a staff member
-    - Update a staff member
-    - Delete a staff member
-  
-  - Categories
-    - List categories
-    - Show a category
-    - Create a category
-    - Update a category
-    - Delete a category
-  
-  - Products
-    - List product
-    - Show a product
-    - Create a product
-    - Update a product
-    - Delete a product
-    - Could be importable as CSV
-  
-  - Orders
-      - List Orders
-      - Show an order
-  
-  - Reports
-    - Members count
-    - Member registered in period to specific time
-    - Orders created in period to specific time
+- Customers
+  - List customers 
+  - Show a customer
+  - Create a customer
+  - Update a customer 
+  - Delete a customer
+
+- Staff
+  - List staff members
+  - Show a staff member
+  - Create a staff member
+  - Update a staff member
+  - Delete a staff member
+
+- Categories
+  - List categories
+  - Show a category
+  - Create a category
+  - Update a category
+  - Delete a category
+
+- Products
+  - List product
+  - Show a product
+  - Create a product
+  - Update a product
+  - Delete a product
+  - Could be importable as CSV
+
+- Orders
+    - List Orders
+    - Show an order
+
+- Coupons
+  - List Coupons
+  - Create a coupon
+  - Update a coupon
+  - Show a coupon with its history
+  - Delete a coupon
+
+- Reports
+  - Members count
+  - Member registered in period to specific time
+  - Orders created in period to specific time
   
 ### Editor Section: 
   
-  - Categories
-    - List categories
-    - Show a category
-    - Create a category
-    - Update a category
-  - Products
-    - List categories
-    - Show a category
-    - Create a category
-    - Update a category
-    - Could be importable
+- Categories
+  - List categories
+  - Show a category
+  - Create a category
+  - Update a category
+- Products
+  - List categories
+  - Show a category
+  - Create a category
+  - Update a category
+  - Could be importable
 
 # Contributing
 
