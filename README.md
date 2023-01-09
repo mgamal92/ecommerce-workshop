@@ -1,5 +1,7 @@
 # eCommerce Application Workshop
 
+[![CI](https://github.com/mgamal92/ecommerce-workshop/actions/workflows/laravel.yml/badge.svg)](https://github.com/piscibus/php-hashtag/actions/workflows/ci.yml)
+
 - Authentication with Sanctum _[The auth roues placed in routes/auth.php]_
   - Login/Register with Welcome Email
   - Forget Password
