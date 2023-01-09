@@ -1,21 +1,19 @@
 # eCommerce Application Workshop
 
-[![CI](https://github.com/mgamal92/ecommerce-workshop/actions/workflows/laravel.yml/badge.svg)](https://github.com/piscibus/php-hashtag/actions/workflows/ci.yml)
-
 - Authentication with Sanctum _[The auth roues placed in routes/auth.php]_
   - Login/Register with Welcome Email
   - Forget Password
   
 - Categories
-  - List
-  - Show
+  - List categories
+  - Show a category
   - List Category Products
 
 - Products with Cache
-  - List
-  - Show
-  - Filter
-  - Search
+  - List products
+  - Show a product
+  - Filter products 
+  - Search for products
   
 - Cart
   - Add/Delete to Cart
@@ -30,7 +28,8 @@
     - Vodafone Cash
 
 - Invoice
-  - List/Show 
+  - List the customer invoices
+  - Show an invoice
 
 - Orders
     - Get the latest orders
@@ -46,23 +45,37 @@
 
 - Manage 
   - Customers
-    - List/Show/Create/Update/Delete
+    - List customers 
+    - Show a customer
+    - Create a customer
+    - Update a customer 
+    - Delete a customer
   
   - Staff
-    - List/Show/Create/Update/Delete
+    - List staff members
+    - Show a staff member
+    - Create a staff member
+    - Update a staff member
+    - Delete a staff member
   
   - Categories
-    - List/Show/Create/Update/Delete
+    - List categories
+    - Show a category
+    - Create a category
+    - Update a category
+    - Delete a category
   
   - Products
-    - List/Show/Create/Update/Delete
+    - List product
+    - Show a product
+    - Create a product
+    - Update a product
+    - Delete a product
     - Could be importable as CSV
   
   - Orders
-      - List/Show
-  
-  - Activity Log
-    - List/Filter by staff or date
+      - List Orders
+      - Show an order
   
   - Reports
     - Members count
@@ -71,11 +84,17 @@
   
 ### Editor Section: 
   
-- Categories
-  - List/Show/Create/Update
-- Products
-  - List/Show/Create/Update
-  - Could be importable
+  - Categories
+    - List categories
+    - Show a category
+    - Create a category
+    - Update a category
+  - Products
+    - List categories
+    - Show a category
+    - Create a category
+    - Update a category
+    - Could be importable
 
 # Contributing
 
