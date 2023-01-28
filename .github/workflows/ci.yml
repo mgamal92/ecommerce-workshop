@@ -39,7 +39,7 @@ jobs:
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
-      run: composer test
+      run: php artisan test --testdox
 
     - name: Check Code Style
       run: composer check-style
