@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoriesResource;
 use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
+
+    protected CategoryService $categoryService;
+
+    public function __construct(CategoryService $categoryService)
+    {
+        return $this->categoryService = $categoryService;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): Response
+    public function index()
     {
-        return response(Response::HTTP_OK);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        //return all categories
+        return CategoriesResource::collection($this->categoryService->retrieve());
     }
 
     /**
@@ -36,29 +37,11 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        //NOTE no validations added
+        $category = $this->categoryService->create([$request]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        //
+        //return new category added
+        return new CategoriesResource($category);
     }
 
     /**
@@ -70,7 +53,22 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $updateCategory =  $this->categoryService->update($request->toArray(), $category);
+
+        return new CategoriesResource($updateCategory);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Category  $category
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Category $category)
+    {
+        $showCategory =  $this->categoryService->show($category);
+
+        return new CategoriesResource($showCategory);
     }
 
     /**
@@ -81,6 +79,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        return $this->categoryService->delete($category);
     }
 }
