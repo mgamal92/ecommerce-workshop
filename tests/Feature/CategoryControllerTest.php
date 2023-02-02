@@ -14,18 +14,32 @@ class CategoryControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $user;
+
+    //setup to run before each test method
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = $this->createUser();
+    }
+
+    private function createUser()
+    {
+        return User::create([
+            'name' => 'user',
+            'email' => 'test@test.com',
+            'password' => bcrypt('password123')
+        ]);
+    }
+
     /* 
         /- test retrieve all data
     */
     public function test_the_controller_returns_all_categories_successfully()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => 'test@test.com',
-            'password' => bcrypt('password')
-        ]);
         $categories = Category::create(['id' => 1]);
-        $response = $this->actingAs($user)->getJson('api/categories');
+        $response = $this->actingAs($this->user)->getJson('api/categories');
         $response
             ->assertStatus(200)
             ->assertJsonFragment([
@@ -41,13 +55,8 @@ class CategoryControllerTest extends TestCase
     */
     public function test_the_controller_create_new_category()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => 'test@test.com',
-            'password' => bcrypt('password')
-        ]);
         $category = Category::create(['id' => 1]);
-        $response = $this->actingAs($user)->postJson('api/categories');
+        $response = $this->actingAs($this->user)->postJson('api/categories');
         $response->assertStatus(201);
         $this->assertModelExists($category);
     }
@@ -57,39 +66,24 @@ class CategoryControllerTest extends TestCase
     */
     public function test_the_controller_update_category()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => 'test@test.com',
-            'password' => bcrypt('password')
-        ]);
         $category = Category::create(['id' => 1]);
-        $response = $this->actingAs($user)->putJson("api/categories/1", []);
+        $response = $this->actingAs($this->user)->putJson("api/categories/1", []);
         $response->assertStatus(200);
         $this->assertModelExists($category);
     }
 
     public function test_the_controller_show_category()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => 'test@test.com',
-            'password' => bcrypt('password')
-        ]);
         $category = Category::create(['id' => 1]);
-        $response = $this->actingAs($user)->getJson("api/categories/1");
+        $response = $this->actingAs($this->user)->getJson("api/categories/1");
         $response->assertStatus(200);
         $this->assertModelExists($category);
     }
 
     public function test_the_controller_delete_category()
     {
-        $user = User::create([
-            'name' => 'test',
-            'email' => 'test@test.com',
-            'password' => bcrypt('password')
-        ]);
         $category = Category::create(['id' => 1]);
-        $response = $this->actingAs($user)->deleteJson("api/categories/{$category->id}");
+        $response = $this->actingAs($this->user)->deleteJson("api/categories/{$category->id}");
         $response->assertStatus(204);
         $this->assertDatabaseMissing('categories', [
             'id' => $category->id,
