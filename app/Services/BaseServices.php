@@ -27,7 +27,7 @@ abstract class BaseServices
      * @param array $data
      * @return Model
      */
-    protected function create($model, array $data)
+    protected function store($model, array $data)
     {
         return $this->model($model)->create($data);
     }

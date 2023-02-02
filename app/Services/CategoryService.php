@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\CategoriesResource;
 use App\Models\Category;
 use App\Traits\HttpResponses;
 use Illuminate\Database\Eloquent\Model;
@@ -10,19 +11,16 @@ class CategoryService extends BaseServices
 {
     use HttpResponses;
 
-    public function model(): Model
-    {
-        return new Category();
-    }
-
     /**
      * Retrieve all Categories.
      *
      * @return \Illuminate\Support\Collection
      */
-    public function retrieve()
+    public function index()
     {
-        return $this->model()->all();
+        $categories = $this->retrieve(new Category());
+
+        return $categories;
     }
 
     /**
@@ -31,9 +29,11 @@ class CategoryService extends BaseServices
      * @param array $data
      * @return Category
      */
-    public function create(array $data)
+    public function storeCategory(array $data)
     {
-        return $this->model()->create($data);
+        $category = $this->store(new Category(), $data);
+
+        return new CategoriesResource($category);
     }
 
     /**
@@ -43,13 +43,11 @@ class CategoryService extends BaseServices
      * @param model $category
      * @return Category
      */
-    public function update(array $data, $category)
+    public function updateCategory(array $data, $category)
     {
-        $updateCategory = $this->model()->findOrFail($category->id);
+        $updateCategory = $this->update(new Category(), $category->id, $data);
 
-        $updateCategory->update($data);
-
-        return $updateCategory;
+        return new CategoriesResource($updateCategory);
     }
 
     /**
@@ -58,9 +56,9 @@ class CategoryService extends BaseServices
      * @param model $category
      * @return Category
      */
-    public function show($category)
+    public function showCategory($category)
     {
-        return $this->model()->findOrFail($category->id);
+        return new CategoriesResource($this->show(new Category(), $category->id));
     }
 
     /**
@@ -69,10 +67,12 @@ class CategoryService extends BaseServices
      * @param model $category
      * @return bool
      */
-    public function delete($category)
+    public function destroy($category)
     {
-        $this->model()->findOrFail($category->id)->delete();
+        $deleteCategory = $this->delete(new Category(), $category->id);
 
-        return $this->success(null, "Category Deleted Successfully", 204);
+        if (!$deleteCategory) {
+            return $this->success(null, "Category Deleted Successfully", 200);
+        }
     }
 }

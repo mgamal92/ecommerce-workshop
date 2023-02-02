@@ -26,7 +26,7 @@ class CategoryController extends Controller
     public function index()
     {
         //return all categories
-        return CategoriesResource::collection($this->categoryService->retrieve());
+        return $this->categoryService->index();
     }
 
     /**
@@ -38,10 +38,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //NOTE no validations added
-        $category = $this->categoryService->create([$request]);
-
-        //return new category added
-        return new CategoriesResource($category);
+        return $this->categoryService->storeCategory($request->toArray());
     }
 
     /**
@@ -53,9 +50,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $updateCategory =  $this->categoryService->update($request->toArray(), $category);
-
-        return new CategoriesResource($updateCategory);
+        return $this->categoryService->updateCategory($request->toArray(), $category);
     }
 
     /**
@@ -66,9 +61,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        $showCategory =  $this->categoryService->show($category);
-
-        return new CategoriesResource($showCategory);
+        return $this->categoryService->showCategory($category);
     }
 
     /**
@@ -79,6 +72,6 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        return $this->categoryService->delete($category);
+        return $this->categoryService->destroy($category);
     }
 }
