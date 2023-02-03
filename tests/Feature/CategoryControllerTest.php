@@ -2,11 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Http\Resources\CategoriesResource;
 use App\Models\Category;
 use App\Models\User;
-use App\Services\CategoryService;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -15,18 +12,15 @@ class CategoryControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+    private Category $category;
 
     //setup to run before each test method
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = $this->createUser();
-    }
-
-    private function createUser()
-    {
-        return User::factory()->create();
+        $this->user = User::factory()->create();
+        $this->category = Category::factory()->create();
     }
 
     /* 
@@ -34,7 +28,7 @@ class CategoryControllerTest extends TestCase
     */
     public function test_the_controller_returns_all_categories_successfully()
     {
-        $categories = Category::factory()->create();
+        $categories = $this->category;
         $response = $this->actingAs($this->user)->getJson('api/categories');
         $response->assertStatus(200);
         $this->assertModelExists($categories);
@@ -45,7 +39,7 @@ class CategoryControllerTest extends TestCase
     */
     public function test_the_controller_create_new_category()
     {
-        $category = Category::factory()->create();
+        $category = $this->category;
         $response = $this->actingAs($this->user)->postJson('api/categories');
         $response->assertStatus(201);
         $this->assertModelExists($category);
@@ -56,7 +50,7 @@ class CategoryControllerTest extends TestCase
     */
     public function test_the_controller_update_category()
     {
-        $category = Category::factory()->create();
+        $category = $this->category;
         $response = $this->actingAs($this->user)->putJson("api/categories/{$category->id}", []);
         $response->assertStatus(200);
         $this->assertModelExists($category);
@@ -64,7 +58,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_the_controller_show_category()
     {
-        $category = Category::factory()->create();
+        $category = $this->category;
         $response = $this->actingAs($this->user)->getJson("api/categories/{$category->id}");
         $response->assertStatus(200);
         $this->assertModelExists($category);
@@ -72,7 +66,7 @@ class CategoryControllerTest extends TestCase
 
     public function test_the_controller_delete_category()
     {
-        $category = Category::factory()->create();
+        $category = $this->category;
         $response = $this->actingAs($this->user)->deleteJson("api/categories/{$category->id}");
         $response->assertStatus(200);
         $this->assertDatabaseMissing('categories', [
