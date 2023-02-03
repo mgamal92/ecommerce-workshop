@@ -26,11 +26,7 @@ class CategoryControllerTest extends TestCase
 
     private function createUser()
     {
-        return User::create([
-            'name' => 'user',
-            'email' => 'test@test.com',
-            'password' => bcrypt('password123')
-        ]);
+        return User::factory()->create();
     }
 
     /* 
