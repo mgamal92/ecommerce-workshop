@@ -15,7 +15,7 @@ abstract class BaseServices
      *
      * @return \Illuminate\Support\Collection
      */
-    protected function retrieve($model)
+    public function retrieve($model)
     {
         return $this->model($model)->all();
     }
@@ -26,7 +26,7 @@ abstract class BaseServices
      * @param array $data
      * @return Model
      */
-    protected function store($model, array $data)
+    public function store($model, array $data)
     {
         return $this->model($model)->create($data);
     }
@@ -38,7 +38,7 @@ abstract class BaseServices
      * @param int $id
      * @return Model
      */
-    protected function update($model, int $id, array $data)
+    public function update($model, int $id, array $data)
     {
         $category = $this->model($model)->findOrFail($id);
 
@@ -53,7 +53,7 @@ abstract class BaseServices
      * @param int $id
      * @return Model
      */
-    protected function show($model, $id)
+    public function show($model, $id)
     {
         return $this->model($model)->findOrFail($id);
     }
@@ -64,7 +64,7 @@ abstract class BaseServices
      * @param int $id
      * @return bool
      */
-    protected function delete($model, $id)
+    public function delete($model, $id)
     {
         $this->model($model)->findOrFail($id)->delete();
     }

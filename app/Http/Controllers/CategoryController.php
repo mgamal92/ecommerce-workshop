@@ -5,17 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CategoriesResource;
 use App\Models\Category;
 use App\Services\CategoryService;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
+    use HttpResponses;
 
     protected CategoryService $categoryService;
 
+    protected $model;
+
     public function __construct(CategoryService $categoryService)
     {
-        return $this->categoryService = $categoryService;
+        $this->categoryService = $categoryService;
+        $this->model = new Category();
     }
 
     /**
@@ -26,7 +31,7 @@ class CategoryController extends Controller
     public function index()
     {
         //return all categories
-        return $this->categoryService->index();
+        return CategoriesResource::collection($this->categoryService->retrieve($this->model));
     }
 
     /**
@@ -37,8 +42,10 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //NOTE no validations added
-        return $this->categoryService->storeCategory($request->toArray());
+        //NOTE no validations applied
+        $category = $this->categoryService->store($this->model, $request->toArray());
+
+        return new CategoriesResource($category);
     }
 
     /**
@@ -50,7 +57,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        return $this->categoryService->updateCategory($request->toArray(), $category);
+        $updateCategory = $this->categoryService->update($this->model, $category->id, $request->toArray());
+
+        return new CategoriesResource($updateCategory);
     }
 
     /**
@@ -61,7 +70,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return $this->categoryService->showCategory($category);
+        return new CategoriesResource($this->categoryService->show($this->model, $category->id));
     }
 
     /**
@@ -72,6 +81,10 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        return $this->categoryService->destroy($category);
+        $deleteCategory = $this->categoryService->delete($this->model, $category->id);
+
+        if (!$deleteCategory) {
+            return $this->success(null, "Category Deleted Successfully", 200);
+        }
     }
 }
