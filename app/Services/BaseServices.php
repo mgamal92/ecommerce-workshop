@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseServices
 {
-
-    private function model($model)
+    private function model($model): Model
     {
-        return $model;
+        return new $model;
     }
     /**
      * Retrieve all records.

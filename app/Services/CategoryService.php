@@ -11,6 +11,13 @@ class CategoryService extends BaseServices
 {
     use HttpResponses;
 
+    protected $model;
+
+    public function __construct()
+    {
+        $this->model = new Category();
+    }
+
     /**
      * Retrieve all Categories.
      *
@@ -18,7 +25,7 @@ class CategoryService extends BaseServices
      */
     public function index()
     {
-        $categories = $this->retrieve(new Category());
+        $categories = $this->retrieve($this->model);
 
         return $categories;
     }
@@ -31,7 +38,7 @@ class CategoryService extends BaseServices
      */
     public function storeCategory(array $data)
     {
-        $category = $this->store(new Category(), $data);
+        $category = $this->store($this->model, $data);
 
         return new CategoriesResource($category);
     }
@@ -45,7 +52,7 @@ class CategoryService extends BaseServices
      */
     public function updateCategory(array $data, $category)
     {
-        $updateCategory = $this->update(new Category(), $category->id, $data);
+        $updateCategory = $this->update($this->model, $category->id, $data);
 
         return new CategoriesResource($updateCategory);
     }
@@ -58,7 +65,7 @@ class CategoryService extends BaseServices
      */
     public function showCategory($category)
     {
-        return new CategoriesResource($this->show(new Category(), $category->id));
+        return new CategoriesResource($this->show($this->model, $category->id));
     }
 
     /**
@@ -69,7 +76,7 @@ class CategoryService extends BaseServices
      */
     public function destroy($category)
     {
-        $deleteCategory = $this->delete(new Category(), $category->id);
+        $deleteCategory = $this->delete($this->model, $category->id);
 
         if (!$deleteCategory) {
             return $this->success(null, "Category Deleted Successfully", 200);
