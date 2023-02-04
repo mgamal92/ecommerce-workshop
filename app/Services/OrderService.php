@@ -2,6 +2,6 @@
 
 namespace App\Services;
 
-class OrderService
+class OrderService extends BaseServices
 {
 }
