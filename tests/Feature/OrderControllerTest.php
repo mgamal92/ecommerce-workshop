@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -9,13 +11,31 @@ class OrderControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic test example.
-     */
-    public function test_the_controller_returns_a_successful_response()
-    {
-        $response = $this->get('api/orders');
+    private User $user;
+    private Order $order;
 
-        $response->assertStatus(302);
+    //setup to run before each test method
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->user = User::factory()->create();
+        $this->order = Order::factory()->create();
+    }
+
+    public function test_the_controller_returns_all_orders_successfully()
+    {
+        $orders = $this->order;
+        $response = $this->actingAs($this->user)->getJson('api/orders');
+        $response->assertStatus(200);
+        $this->assertModelExists($orders);
+    }
+
+    public function test_the_controller_show_order()
+    {
+        $order = $this->order;
+        $response = $this->actingAs($this->user)->getJson("api/orders/{$order->id}");
+        $response->assertStatus(200);
+        $this->assertModelExists($order);
     }
 }

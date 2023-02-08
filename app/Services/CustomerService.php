@@ -2,6 +2,6 @@
 
 namespace App\Services;
 
-class CustomerService
+class CustomerService extends BaseServices
 {
 }
