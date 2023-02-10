@@ -5,11 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class CategoryProducts extends Model
 {
     use HasFactory;
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'category_products');
-    }
+    protected $filable = ['category_id', 'product_id'];
+    public $timestamps = false;
 }
