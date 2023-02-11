@@ -31,10 +31,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return new UserResource($request->user());
     });
-    Route::post('/admin/create-user', [AdminController::class, 'create_new_user']);
 });
 
+Route::group(['middleware' => ['auth:sanctum','role:admin'],'namespace'=>'admin','prefix'=>'admin'], function () {
+    Route::post('/create-user', [AdminController::class, 'create_new_user']);
 
+});
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('categories', CategoryController::class);
