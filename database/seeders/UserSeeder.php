@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-    User::factory()
+        User::factory()
                 ->count(20)
                 ->create();
         $user_list = Permission::create(['name'=> 'users.list']);
