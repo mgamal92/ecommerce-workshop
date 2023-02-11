@@ -31,7 +31,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return new UserResource($request->user());
     });
-    Route::post('/admin/create-user', [AdminController::class, 'create_new_user'])->middleware('is_Admin');
+    Route::post('/admin/create-user', [AdminController::class, 'create_new_user']);
 });
 
 
