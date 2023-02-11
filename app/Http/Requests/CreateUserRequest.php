@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Http\Helpers\Helper;
 use Illuminate\Contracts\Validation\Validator;
 
-class RegisterRequest extends FormRequest
+class CreateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -32,7 +32,9 @@ class RegisterRequest extends FormRequest
             'is_admin'  => 'required',
 
         ];
+        
     }
+    
     public function failedValidation(Validator $validator){
         Helper::sendError('validation error', $validator->errors());
     }

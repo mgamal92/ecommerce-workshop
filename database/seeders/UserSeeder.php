@@ -33,10 +33,8 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        $admin_role = Role::create(['name'=> 'admin']);
-        $admin->assignRole($admin_role);
+        $admin->assignRole('admin');
         $admin->givePermissionTo([$user_list,$user_create,$user_update,$user_delete,$user_view]);
-        $admin_role->givePermissionTo([$user_list,$user_create,$user_update,$user_delete,$user_view]);
 
 
 
@@ -48,12 +46,9 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
         /* create role and give this role some permission */
-        $user_role = Role::create(['name'=> 'user']);
         /* asign this user for this role */
-        $user->assignRole($user_role);
+        $user->assignRole('user');
         /* give permission for this user remote this role */ // can be any permission without need role
         $user->givePermissionTo([$user_list]);// table model has permissions
-        $user_role->givePermissionTo([$user_list]); // table roles has permissions
-
     }
 }

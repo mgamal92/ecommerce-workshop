@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Helpers\Helper;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -17,11 +18,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        // $request->authenticate();
 
-        $request->session()->regenerate();
-
-        return response()->noContent();
+        // $request->session()->regenerate();
+        if(!Auth::attempt($request->only('email', 'password'))) {
+            Helper::sendError('Email Or Password is incorrect');
+        }
+        return auth()->user();
     }
 
     /**
