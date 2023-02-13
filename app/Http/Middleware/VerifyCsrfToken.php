@@ -10,8 +10,9 @@ class VerifyCsrfToken extends Middleware
      * The URIs that should be excluded from CSRF verification.
      *
      * @var array<int, string>
+     * //* disabled CSRF for /register URI, this is in order to solve (error: CSRF token mismatch), this error caused by breeze using default web middleware for auth.php registration in api stack instead of "api" middleware
      */
     protected $except = [
-        //
+        '/register'
     ];
 }
