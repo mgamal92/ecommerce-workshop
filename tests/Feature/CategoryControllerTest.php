@@ -64,6 +64,14 @@ class CategoryControllerTest extends TestCase
         $this->assertModelExists($category);
     }
 
+    public function test_the_controller_show_category_with_products()
+    {
+        $category = $this->category;
+        $response = $this->actingAs($this->user)->getJson("api/categories/{$category->id}/products");
+        $response->assertStatus(200);
+        $this->assertModelExists($category);
+    }
+
     public function test_the_controller_delete_category()
     {
         $category = $this->category;
