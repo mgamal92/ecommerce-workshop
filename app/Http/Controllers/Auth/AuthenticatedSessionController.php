@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Resources\UsersResource;
+use App\Models\User;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+    use HttpResponses;
     /**
      * Handle an incoming authentication request.
      *
@@ -17,11 +21,19 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->authenticate();
+        $request->validated();
 
-        $request->session()->regenerate();
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return $this->error(null, 'Credentials does not match', 401);
+        }
 
-        return response()->noContent();
+        $user = User::whereEmail($request->email)->first();
+
+        return (new UsersResource($user))->additional([
+            'data' => [
+                'token' => $user->createToken('API token of ' . $user->email)->plainTextToken
+            ]
+        ]);
     }
 
     /**
@@ -30,14 +42,12 @@ class AuthenticatedSessionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy()
     {
-        Auth::guard('web')->logout();
+        $user = Auth::user()->tokens()->delete();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
+        if ($user) {
+            return $this->success(null, 'you have logged out successfully');
+        }
     }
 }
