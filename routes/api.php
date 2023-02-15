@@ -21,9 +21,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('categories', CategoryController::class);
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('carts', CartController::class);
     Route::resource('checkout', CheckoutController::class);
