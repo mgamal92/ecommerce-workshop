@@ -19,7 +19,7 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'products_count' => fake()->randomDigitNot(0),
+            'products_count' => fake()->randomDigitNotZero(),
         ];
     }
 }

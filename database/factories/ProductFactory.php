@@ -19,7 +19,8 @@ class ProductFactory extends Factory
         return [
             'category_id' => fake()->randomDigitNotZero(),
             'name' => fake()->name(),
-            'price' => fake()->unique()->safeEmail(),
+            'price' => fake()->randomNumber(),
+            'quantity' => fake()->randomNumber(),
         ];
     }
 }

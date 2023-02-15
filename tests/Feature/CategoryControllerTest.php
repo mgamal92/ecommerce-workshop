@@ -40,7 +40,10 @@ class CategoryControllerTest extends TestCase
     public function test_the_controller_create_new_category()
     {
         $category = $this->category;
-        $response = $this->actingAs($this->user)->postJson('api/categories');
+        $response = $this->actingAs($this->user)->postJson('api/categories', [
+            'name' => $this->category->name,
+            'products_count' => $this->category->products_count,
+        ]);
         $response->assertStatus(201);
         $this->assertModelExists($category);
     }
