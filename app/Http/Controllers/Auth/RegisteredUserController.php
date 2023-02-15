@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UsersResource;
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\Rules;
 
 class RegisteredUserController extends Controller
 {
@@ -23,8 +24,8 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
@@ -33,10 +34,10 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return (new UsersResource($user))->additional([
-            'data' => [
-                'token' => $user->createToken("API Token of " . $user->email)->plainTextToken
-            ]
-        ]);
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return response()->noContent();
     }
 }

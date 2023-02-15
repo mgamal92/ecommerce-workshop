@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
@@ -32,17 +31,4 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('invoices', InvoiceController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('customers', CustomerController::class);
-
-    //user roles
-    Route::middleware(['role:super-admin'])->group(function () {
-
-        Route::resource('user/roles', AdminRolesController::class);
-
-        Route::controller(AdminRolesController::class)->group(function () {
-
-            Route::post('assign-role/users/{user}/roles/{role}', 'assignRole');
-
-            Route::post('remove-role/users/{user}/roles/{role}', 'dropRole');
-        });
-    });
 });
