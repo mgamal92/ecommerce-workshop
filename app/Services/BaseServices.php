@@ -17,7 +17,7 @@ abstract class BaseServices
      */
     public function retrieve($model)
     {
-        return $this->model($model)->all();
+        return $this->model($model)->paginate();
     }
 
     /**
