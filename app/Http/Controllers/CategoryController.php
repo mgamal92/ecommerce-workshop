@@ -31,7 +31,7 @@ class CategoryController extends Controller
     {
         //return all categories with "products count belongs to each category"
 
-        return CategoriesResource::collection($this->categoryService->index());
+        return CategoriesResource::collection($this->categoryService->retrieve($this->model));
     }
 
     /**
