@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoryService extends BaseServices
 {
-    public function index()
+    public function retrieve($model)
     {
-        $category = new Category;        
-        $categories = $category::withCount('products')->get();
+        $categories = $model::withCount('products')->get();
         return $categories;
     }
 }
