@@ -19,7 +19,7 @@ class ProductController extends Controller
     public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
-        $this->model = new Product();
+        $this->model = new Product;
     }
 
     /**
@@ -29,7 +29,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return ProductsResource::collection($this->productService->retrieve($this->model));
+        $products = $this->productService->getAllProducts($this->model);
+        return count($products) > 0
+            ? $this->success(ProductsResource::collection($products),'products list')
+            : $this->error(null, 'No Products Found', 404);
     }
 
     /**
