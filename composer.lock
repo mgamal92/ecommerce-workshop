@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "06ac620886806eda383fb99f1584a8a1",
+    "content-hash": "569703a4a1fbb557f6ae4d884df3763b",
     "packages": [
         {
             "name": "brick/math",
@@ -1363,6 +1363,79 @@
                 }
             ],
             "time": "2021-10-07T12:57:01+00:00"
+        },
+        {
+            "name": "l3aro/pipeline-query-collection",
+            "version": "v1.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/l3aro/pipeline-query-collection.git",
+                "reference": "254bb0b71ed7b3174d2851464da35139f67b6b6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/l3aro/pipeline-query-collection/zipball/254bb0b71ed7b3174d2851464da35139f67b6b6b",
+                "reference": "254bb0b71ed7b3174d2851464da35139f67b6b6b",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.9.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.8",
+                "nunomaduro/collision": "^6.0",
+                "nunomaduro/larastan": "^2.0.1",
+                "orchestra/testbench": "^7.0",
+                "pestphp/pest": "^1.21",
+                "pestphp/pest-plugin-laravel": "^1.1",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^1.0",
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^9.5",
+                "spatie/laravel-ray": "^1.26"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Baro\\PipelineQueryCollection\\PipelineQueryCollectionServiceProvider"
+                    ],
+                    "aliases": {
+                        "PipelineQueryCollection": "Baro\\PipelineQueryCollection\\Facades\\PipelineQueryCollection"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Baro\\PipelineQueryCollection\\": "src",
+                    "Baro\\PipelineQueryCollection\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "l3aro",
+                    "email": "dgbao1340@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A query database collection for use with Laravel Pipeline",
+            "homepage": "https://github.com/l3aro/pipeline-query-collection",
+            "keywords": [
+                "l3aro",
+                "laravel",
+                "pipeline-query-collection"
+            ],
+            "support": {
+                "issues": "https://github.com/l3aro/pipeline-query-collection/issues",
+                "source": "https://github.com/l3aro/pipeline-query-collection/tree/v1.3.5"
+            },
+            "time": "2022-07-07T17:43:17+00:00"
         },
         {
             "name": "laravel/framework",
@@ -3440,6 +3513,66 @@
                 }
             ],
             "time": "2020-10-26T13:10:38+00:00"
+        },
+        {
+            "name": "spatie/laravel-package-tools",
+            "version": "1.14.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-package-tools.git",
+                "reference": "b477dd2f89d0751f0e51ffb3a70181f0bc7ab8df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-package-tools/zipball/b477dd2f89d0751f0e51ffb3a70181f0bc7ab8df",
+                "reference": "b477dd2f89d0751f0e51ffb3a70181f0bc7ab8df",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": "^9.28|^10.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.5",
+                "orchestra/testbench": "^7.7|^8.0",
+                "pestphp/pest": "^1.22",
+                "phpunit/phpunit": "^9.5.24",
+                "spatie/pest-plugin-test-time": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\LaravelPackageTools\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Tools for creating Laravel packages",
+            "homepage": "https://github.com/spatie/laravel-package-tools",
+            "keywords": [
+                "laravel-package-tools",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-package-tools/issues",
+                "source": "https://github.com/spatie/laravel-package-tools/tree/1.14.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-01-27T15:33:45+00:00"
         },
         {
             "name": "spatie/laravel-permission",
