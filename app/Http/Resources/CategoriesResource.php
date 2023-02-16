@@ -17,6 +17,8 @@ class CategoriesResource extends JsonResource
         return [
             'id' => (string) $this->id,
             'attributes' => [
+                'name' => $this->name,
+                'products_count' => $this->products_count,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
             ]
