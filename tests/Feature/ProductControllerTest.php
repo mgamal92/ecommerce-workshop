@@ -13,6 +13,7 @@ class ProductControllerTest extends TestCase
 
     private User $user;
     private Product $product;
+    private Category $category;
 
     //setup to run before each test method
     protected function setUp(): void
@@ -20,6 +21,7 @@ class ProductControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
+        $this->category = Category::factory()->create();
         $this->product = Product::factory()->create();
     }
 
