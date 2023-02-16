@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->integer('quantity');
             $table->float('price');
+
+            $table->foreign('category_id')->references('id')->on('categories');
         });
     }
 
