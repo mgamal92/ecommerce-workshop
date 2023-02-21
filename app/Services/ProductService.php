@@ -24,6 +24,10 @@ class ProductService extends BaseServices
 
     public function retrieve($model)
     {
-        return $this->model->filter()->paginate();
+        return $this->model->Filter(
+            request()->get('category'),
+            request()->get('name'),
+            request()->get('price')
+        )->paginate();
     }
 }

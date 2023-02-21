@@ -4,30 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Baro\PipelineQueryCollection\Concerns\Filterable;
-use Baro\PipelineQueryCollection\Contracts\CanFilterContract;
-use Baro\PipelineQueryCollection\RelativeFilter;
-use Baro\PipelineQueryCollection\RelationFilter;
-use Baro\PipelineQueryCollection\ExactFilter;
 
 
-class Product extends Model implements CanFilterContract
+class Product extends Model
 {
-    use HasFactory, Filterable;
+    use HasFactory;
 
     protected $fillable = ['category_id', 'name', 'quantity', 'price'];
-
-    public function getFilters(): array
-    {
-        return [
-            new RelativeFilter('name'),
-            new ExactFilter('price'),
-            new RelationFilter('category', 'id'),
-        ];
-    }
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function scopeFilter($query, $category, $name, $price) {
+        return $query
+            ->when($category, function ($query, $category) {
+                $query->WhereHas('category', function ($query) use ($category) {
+                    $query->where('name', $category);
+                });
+            })
+            ->when($name, function ($query, $name) {
+                $query->where('name', 'like', '%'.$name.'%');
+            })
+            ->when($price, function ($query, $price) {
+                $query->where('price', $price);
+            });
     }
 }
