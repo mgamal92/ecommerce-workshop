@@ -37,8 +37,8 @@ class ProductControllerTest extends TestCase
         $response = $this->actingAs($this->user)->postJson('api/products', [
             'category_id' => $this->product->category_id,
             'name' => $this->product->name,
-            'price' => $this->product->price,
             'quantity' => $this->product->quantity,
+            'price' => $this->product->price,
         ]);
         $response->assertStatus(201);
         $this->assertModelExists($product);
