@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('products', ProductController::class);
+Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('categories', CategoryController::class);
