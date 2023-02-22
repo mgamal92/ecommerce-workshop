@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -13,6 +14,7 @@ class ProductControllerTest extends TestCase
 
     private User $user;
     private Product $product;
+    private Category $category;
 
     //setup to run before each test method
     protected function setUp(): void
@@ -20,6 +22,7 @@ class ProductControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
+        $this->category = Category::factory()->create();
         $this->product = Product::factory()->create();
     }
 
@@ -34,7 +37,12 @@ class ProductControllerTest extends TestCase
     public function test_the_controller_create_new_product()
     {
         $product = $this->product;
-        $response = $this->actingAs($this->user)->postJson('api/products');
+        $response = $this->actingAs($this->user)->postJson('api/products', [
+            'category_id' => $this->product->category_id,
+            'name' => $this->product->name,
+            'quantity' => $this->product->quantity,
+            'price' => $this->product->price,
+        ]);
         $response->assertStatus(201);
         $this->assertModelExists($product);
     }
