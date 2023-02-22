@@ -29,7 +29,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return ProductsResource::collection($this->productService->getAllProducts($this->model));
+        $products = $this->productService->getAllProducts($this->model);
+        return count($products) > 0
+            ? $this->success(ProductsResource::collection($products),'products list')
+            : $this->error(null, 'No Products Found', 404);
     }
 
     /**
