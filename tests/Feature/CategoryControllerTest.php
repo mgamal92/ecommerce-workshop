@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -83,5 +84,15 @@ class CategoryControllerTest extends TestCase
         $this->assertDatabaseMissing('categories', [
             'id' => $category->id,
         ]);
+    }
+
+    public function test_increments_products_count_when_new_product_is_created()
+    {
+        $category = Category::factory()->create(['products_count' => 0]);
+        $product = Product::factory()->create(['category_id' => $category->id]);
+
+        $category->refresh();
+
+        $this->assertEquals(1, $category->products_count);
     }
 }

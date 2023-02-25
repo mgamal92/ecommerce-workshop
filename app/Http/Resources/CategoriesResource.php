@@ -14,9 +14,12 @@ class CategoriesResource extends JsonResource
      */
     public function toArray($request)
     {
+        //*don't remove the type conversion (string), integer must returned as string according to JSON-api specification
         return [
-            'id' => $this->id,
+            'id' => (string) $this->id,
             'attributes' => [
+                'name' => $this->name,
+                'products_count' => (string) $this->products_count,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
             ]
