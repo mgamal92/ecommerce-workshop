@@ -30,4 +30,10 @@ class ProductService extends BaseServices
             request()->get('price')
         )->paginate();
     }
+
+    public function checkQuantity($quantity, $id)
+    {
+        $product = $this->model->findOrFail($id);
+        return $quantity > 0 && $quantity < $product->quantity;
+    }
 }

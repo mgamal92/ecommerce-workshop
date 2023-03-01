@@ -2,73 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
+use App\Http\Resources\CartsResource;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\Cart;
+use App\Services\CartService;
+use App\Traits\HttpResponses;
 
 class CartController extends Controller
 {
+    use HttpResponses;
+
+    protected CartService $cartService;
+    protected $model;
+
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
+        $this->model = new Cart();
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): Response
+    public function index()
     {
-        return response(Response::HTTP_OK);
+        $cart = $this->cartService->retrieve($this->model);
+        return count($cart) > 0
+            ? $this->success(CartsResource::collection($cart),'cart items list')
+            : $this->error(null, 'No Cart Items Found', 404);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * create cart in not exist.
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cart $cart)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Cart $cart)
     {
         //
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductsResource;
 use App\Models\Product;
+use App\Services\CartService;
 use App\Services\ProductService;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -13,12 +14,14 @@ class ProductController extends Controller
     use HttpResponses;
 
     protected ProductService $productService;
+    protected CartService $cartService;
 
     protected $model;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, CartService $cartService)
     {
         $this->productService = $productService;
+        $this->cartService = $cartService;
         $this->model = new Product;
     }
 
@@ -87,5 +90,15 @@ class ProductController extends Controller
         if (!$deleteProduct) {
             return $this->success(null, "Product Deleted Successfully", 200);
         }
+    }
+
+    // add product to cart
+    public function addToCart(Request $request, Product $product)
+    {
+        $product_has_enough_quantity = $this->productService->checkQuantity($request->quantity, $product->id);
+
+        return $product_has_enough_quantity
+            ? $this->cartService->addToCart($product, $request->quantity)
+            : $this->error(null, 'Product doesn\'t have enough quantity', 404);
     }
 }
