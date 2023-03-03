@@ -7,10 +7,12 @@ use App\Models\Product;
 class ProductService extends BaseServices
 {
     protected $model;
+    protected $cartService;
 
-    public function __construct()
+    public function __construct(CartService $cartService)
     {
         $this->model = new Product();
+        $this->cartService = $cartService;
     }
 
     public function getAllProducts($model)
@@ -31,9 +33,17 @@ class ProductService extends BaseServices
         )->paginate();
     }
 
-    public function checkQuantity($quantity, $id)
+    public function checkIfProductExist($id)
     {
-        $product = $this->model->findOrFail($id);
-        return $quantity > 0 && $quantity < $product->quantity;
+        return $this->model->find($id);
+    }
+
+    public function checkQuantity($quantity, Product $product)
+    {
+        $qty = $this->cartService->getProductquantityInCart($product->id)
+            ? $quantity+$this->cartService->getProductquantityInCart($product->id)
+            : $quantity;
+
+        return $qty > 0 && $qty <= $product->quantity;
     }
 }

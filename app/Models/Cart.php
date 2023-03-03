@@ -12,10 +12,10 @@ class Cart extends Model
     protected $fillable = ['customer_id', 'products'];
 
     protected $casts = [
-        'products' => 'json',
+        'products' => 'array'
     ];
 
     public function customer() {
-        $this->belongsTo(Customer::class, 'customer_id');
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 }
