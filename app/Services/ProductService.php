@@ -4,9 +4,12 @@ namespace App\Services;
 
 use App\Http\Resources\ProductsResource;
 use App\Models\Product;
+use App\Traits\HttpResponses;
 
 class ProductService extends BaseServices
 {
+    use HttpResponses;
+
     protected $model;
 
     public function __construct()
@@ -34,12 +37,12 @@ class ProductService extends BaseServices
 
     public function search($query)
     {
-        $products =  ProductsResource::collection($this->model->search($query)->paginate());
+        $products = $this->model->search($query)->paginate();
 
         if (count($products) == 0) {
             return $this->error(null, 'no products found', 404);
         }
 
-        return $products;
+        return ProductsResource::collection($products);
     }
 }
