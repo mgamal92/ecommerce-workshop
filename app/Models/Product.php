@@ -52,4 +52,14 @@ class Product extends Model
                 ->decrement('products_count');
         });
     }
+    public function scopeSearch($query, $val)
+    {
+        return $query
+            ->where('name', 'like', '%' . $val . '%')
+            ->OrWhere('price', 'like', '%' . $val . '%')
+            ->OrWhere('created_at', 'like', '%' . $val . '%')
+            ->OrWhereHas('category', function ($query) use ($val) {
+                $query->where('name', 'like', '%' . $val . '%');
+            });
+    }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\ProductsResource;
 use App\Models\Product;
 
 class ProductService extends BaseServices
@@ -15,9 +16,9 @@ class ProductService extends BaseServices
 
     public function getAllProducts($model)
     {
-        $currentPage = request()->get('page',1);
-        
-        return cache()->remember('products-'. $currentPage, 60*60*24, function(){
+        $currentPage = request()->get('page', 1);
+
+        return cache()->remember('products-' . $currentPage, 60 * 60 * 24, function () {
             return $this->retrieve($this->model);
         });
     }
@@ -29,5 +30,16 @@ class ProductService extends BaseServices
             request()->get('name'),
             request()->get('price')
         )->paginate();
+    }
+
+    public function search($query)
+    {
+        $products =  ProductsResource::collection($this->model->search($query)->paginate());
+
+        if (count($products) == 0) {
+            return $this->error(null, 'no products found', 404);
+        }
+
+        return $products;
     }
 }

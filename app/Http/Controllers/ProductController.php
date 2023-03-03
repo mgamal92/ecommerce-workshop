@@ -31,7 +31,7 @@ class ProductController extends Controller
     {
         $products = $this->productService->getAllProducts($this->model);
         return count($products) > 0
-            ? $this->success(ProductsResource::collection($products),'products list')
+            ? $this->success(ProductsResource::collection($products), 'products list')
             : $this->error(null, 'No Products Found', 404);
     }
 
@@ -87,5 +87,14 @@ class ProductController extends Controller
         if (!$deleteProduct) {
             return $this->success(null, "Product Deleted Successfully", 200);
         }
+    }
+
+    /**
+     * search for name, price, date and category's name
+     * @param $query
+     */
+    public function search($query)
+    {
+        return $this->productService->search($query);
     }
 }

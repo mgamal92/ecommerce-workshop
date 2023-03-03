@@ -47,3 +47,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
+
+//search in products
+Route::get('products/search/{query}', [ProductController::class, 'search']);
