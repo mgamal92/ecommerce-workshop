@@ -2,29 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddToCartRequest;
-use App\Http\Resources\CartsResource;
+use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
-use App\Models\Cart;
 use App\Models\Product;
-use App\Services\CartService;
 use App\Services\ProductService;
 use App\Traits\HttpResponses;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     use HttpResponses;
 
     protected ProductService $productService;
-    protected CartService $cartService;
-
     protected $model;
 
-    public function __construct(ProductService $productService, CartService $cartService)
+    public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
-        $this->cartService = $cartService;
         $this->model = new Product;
     }
 
@@ -95,20 +88,4 @@ class ProductController extends Controller
         }
     }
 
-    // add product to cart
-    public function addToCart(AddToCartRequest $request, $product_id)
-    {
-        $product = $this->productService->checkIfProductExist($product_id);
-        if($product) {
-            $product_has_enough_quantity = $this->productService->checkQuantity($request->quantity, $product);
-
-            return $product_has_enough_quantity
-                ? $this->cartService->addToCart($product, $request->quantity)
-                : $this->error(null, 'Product doesn\'t have enough quantity', 404);
-        }
-
-        return $this->error(null, 'Product doesn\'t exist', 404);
-        /*$cart = Cart::where('customer_id', 1 /*Auth::user()->id)->first();
-        return collect($cart->products)->where('product_id', 1)->first()['quantity'];*/
-    }
 }

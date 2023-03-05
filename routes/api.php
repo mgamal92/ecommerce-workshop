@@ -22,13 +22,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('products/{id}/add-to-cart', [ProductController::class, 'addToCart']);
-
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
-    //Route::post('products/{id}/add-to-cart', [ProductController::class, 'addToCart']);
     Route::resource('carts', CartController::class);
+    Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart']);
     Route::resource('checkout', CheckoutController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('invoices', InvoiceController::class);

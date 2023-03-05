@@ -72,4 +72,5 @@ class ProductControllerTest extends TestCase
             'id' => $product->id,
         ]);
     }
+
 }

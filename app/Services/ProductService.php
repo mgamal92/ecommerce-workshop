@@ -40,10 +40,7 @@ class ProductService extends BaseServices
 
     public function checkQuantity($quantity, Product $product)
     {
-        $qty = $this->cartService->getProductquantityInCart($product->id)
-            ? $quantity+$this->cartService->getProductquantityInCart($product->id)
-            : $quantity;
-
+        $qty = $quantity + $this->cartService->getProductquantityInCart($product->id);
         return $qty > 0 && $qty <= $product->quantity;
     }
 }

@@ -14,15 +14,21 @@ class CartService extends BaseServices
     public function __construct()
     {
         $this->model = new Cart();
-        $this->cart = $this->model->where('customer_id', 1 /*Auth::user()->id*/)->first();
+        $this->cart = $this->model->where('customer_id', Auth::user()->id)->first();
     }
 
-    public function addToCart(Product $product, $quantity) {
+    public function retrieve($model)
+    {
+        return $this->cart;
+    }
+
+    public function addToCart(Product $product, $quantity)
+    {
         if(!$this->cart) {
             $this->cart = $this->store($this->model, [
-                'customer_id' => 1 /*Auth::user()->id*/,
+                'customer_id' => Auth::user()->id,
                 'products' => [
-                    ['product_id' => (int)$product->id, 'quantity' => (int) $quantity],
+                    ['product_id' => (int)$product->id, 'quantity' => (int)$quantity],
                 ],
             ]);
         }
@@ -33,13 +39,15 @@ class CartService extends BaseServices
         return $this->cart;
     }
 
-    public function updateCart(Product $product, $quantity) {
+    public function updateCart(Product $product, $quantity)
+    {
         $this->checkIfProductExistInCart($product->id)
             ? $this->increaseQuantity($product->id, $quantity)
             : $this->appendProductToCart($product->id, $quantity);
     }
 
-    public function increaseQuantity($product_id, $quantity) {
+    public function increaseQuantity($product_id, $quantity)
+    {
         $cart_products = $this->cart->products;
         foreach($this->cart->products as $key => $product) {
             if($product['product_id'] == $product_id) {
@@ -50,7 +58,8 @@ class CartService extends BaseServices
         $this->cart->update(['products' => $cart_products]);
     }
 
-    public function appendProductToCart($product_id, $quantity) {
+    public function appendProductToCart($product_id, $quantity)
+    {
         $cart_products = $this->cart->products;
         $cart_products[] = ['product_id' => (int)$product_id, 'quantity' => (int)$quantity];
 
@@ -58,11 +67,15 @@ class CartService extends BaseServices
     }
 
 
-    public function checkIfProductExistInCart($product_id) {
-        return collect($this->cart->products)->where('product_id', $product_id)->first();
+    public function checkIfProductExistInCart($product_id)
+    {
+        return $this->cart
+            ? collect($this->cart->products)->where('product_id', $product_id)->first()
+            : false;
     }
 
-    public function getProductquantityInCart($product_id) {
+    public function getProductquantityInCart($product_id)
+    {
         $cart_has_product = $this->checkIfProductExistInCart($product_id);
         return $cart_has_product ? $cart_has_product['quantity'] : 0;
     }
