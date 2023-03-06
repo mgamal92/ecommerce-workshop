@@ -22,6 +22,6 @@ class SendOfferEmail implements ShouldQueue
             dispatch(new DetectUnpurchasedCarts($email));
         }
 
-        Artisan::call('queue:work');
+        // Artisan::call('queue:work');
     }
 }
