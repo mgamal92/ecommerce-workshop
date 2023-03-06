@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Console\Commands\DetectUnpurchasedCartsCommand;
 use App\Models\Cart;
 use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Console\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,6 +27,8 @@ class DetectUnpurchasedCartsCommandTest extends TestCase
         // $command = new DetectUnpurchasedCartsCommand();
 
         $cart = Cart::factory()->create([
+            'user_id' => User::select('id')->inRandomOrder()->first()->id,
+            'offer_sent' => 0,
             'created_at' => Carbon::yesterday(),
         ]);
         Artisan::call('detect:carts');
