@@ -45,3 +45,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 });
+
+Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
