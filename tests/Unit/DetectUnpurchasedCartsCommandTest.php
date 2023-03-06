@@ -24,7 +24,6 @@ class DetectUnpurchasedCartsCommandTest extends TestCase
     public function testDetectUnpurchasedCartsCommand()
     {
         $command = new DetectUnpurchasedCartsCommand();
-        $application = new Application($this->app, $command->getName());
 
         $cart = Cart::factory()->create([
             'created_at' => Carbon::yesterday(),
