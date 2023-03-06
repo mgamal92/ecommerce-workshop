@@ -23,6 +23,6 @@ class DetectUnpurchasedCartsCommand extends Command
 
     public function handle()
     {
-        event(new UsersWithLeftItemsInCart());
+        return event(new UsersWithLeftItemsInCart());
     }
 }
