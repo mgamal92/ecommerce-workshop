@@ -10,7 +10,7 @@ use Illuminate\Console\Application;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class DetectUnpurchasedCartsCommandTest extends TestCase
 {
