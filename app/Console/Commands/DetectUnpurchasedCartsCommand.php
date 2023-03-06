@@ -21,11 +21,6 @@ class DetectUnpurchasedCartsCommand extends Command
      */
     protected $description = 'Detect Unpurchased Carts';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         event(new UsersWithLeftItemsInCart());

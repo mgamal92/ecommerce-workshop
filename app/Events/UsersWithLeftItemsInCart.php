@@ -15,6 +15,7 @@ class UsersWithLeftItemsInCart
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /** @var string $carts */
     public $carts;
 
     /**
