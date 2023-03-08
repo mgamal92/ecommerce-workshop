@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('categories', CategoryController::class);
+    Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
     Route::resource('products', ProductController::class);
     Route::resource('carts', CartController::class);
     Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart']);
@@ -46,5 +47,3 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 });
-
-Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);

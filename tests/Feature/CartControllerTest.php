@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Tests\TestCase;
 
 class CartControllerTest extends TestCase
@@ -31,30 +33,44 @@ class CartControllerTest extends TestCase
      */
     public function test_the_controller_returns_customer_existing_cart()
     {
+        $cart = Cart::factory()->for($this->customer)->create();
         $response = $this->actingAs($this->customer)->getJson('api/carts');
-
-        if($response->getStatusCode() == 404) {
-            $response->assertStatus(404);
-        }
-        else {
-            $response->assertStatus(302);
-        }
+        $response->assertStatus(200);
+        $this->assertModelExists($cart);
     }
 
-    public function test_the_controller_add_product_to_cart()
+    public function test_the_controller_returns_customer_cart_not_exist()
     {
-        $product = $this->product;
-        $response = $this->actingAs($this->customer)->postJson("api/carts/add-to-cart/{$product->id}", [
+        $response = $this->actingAs($this->customer)->getJson('api/carts');
+        $response->assertStatus(404);
+    }
+
+    public function test_the_controller_add_existing_product_with_enough_quantity_to_cart()
+    {
+        $response = $this->actingAs($this->customer)->postJson("api/carts/add-to-cart/{$this->product->id}", [
+            'quantity' => 1,
+        ]);
+
+        $response->assertStatus(201);
+        $this->assertModelExists($this->product);
+    }
+
+    public function test_the_controller_add_existing_product_without_enough_quantity_to_cart()
+    {
+        $response = $this->actingAs($this->customer)->postJson("api/carts/add-to-cart/{$this->product->id}", [
+            'quantity' => random_int(1000000,9999999),
+        ]);
+
+        $response->assertStatus(400);
+        $this->assertModelExists($this->product);
+    }
+
+    public function test_the_controller_add_non_existing_product_to_cart()
+    {
+        $response = $this->actingAs($this->customer)->postJson("api/carts/add-to-cart/0", [
             'quantity' => random_int(1,10),
         ]);
 
-        if($response->getStatusCode() == 400 || $response->getStatusCode() == 404) {
-            $response->assertStatus($response->getStatusCode());
-        }
-        else {
-            $response->assertStatus(201);
-        }
-
-        $this->assertModelExists($product);
+        $response->assertStatus(404);
     }
 }

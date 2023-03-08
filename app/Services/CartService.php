@@ -14,7 +14,7 @@ class CartService extends BaseServices
     public function __construct()
     {
         $this->model = new Cart();
-        $this->cart = $this->model->where('customer_id', Auth::user()->id)->first();
+        $this->cart = Cart::where('customer_id', Auth::guard('customer')->id())->first();
     }
 
     public function retrieve($model)
@@ -26,7 +26,7 @@ class CartService extends BaseServices
     {
         if(!$this->cart) {
             $this->cart = $this->store($this->model, [
-                'customer_id' => Auth::user()->id,
+                'customer_id' => Auth::guard('customer')->id(),
                 'products' => [
                     ['product_id' => (int)$product->id, 'quantity' => (int)$quantity],
                 ],
