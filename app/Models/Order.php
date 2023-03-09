@@ -8,4 +8,33 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     use HasFactory;
+
+    const STATUS_SUCCESSFUL = 1;
+    const  STATUS_PENDING = 0;
+    const STATUS_FAILED = 2;
+    const CARD_PAYMENT = 0;
+    const VODAFONE_PAYMENT = 1;
+
+    protected $fillable = [
+        'order_id',
+        'user_id',
+        'status',
+        'email',
+        'fname',
+        'lname',
+        'street',
+        'building',
+        'floor',
+        'apartment',
+        'additional_info',
+        'phone',
+        'payment_method',
+        'shipping_fees',
+        'total_amount',
+    ];
+
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class, 'order_id');
+    }
 }

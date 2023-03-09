@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\OrdersResource;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Services\OrderService;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
@@ -31,6 +32,10 @@ class OrderController extends Controller
     {
         //List Orders
         return OrdersResource::collection($this->orderService->retrieve($this->model));
+
+        // $order = Order::with('items')->whereOrderId(105995702)->get();
+
+        // return $order->items();
     }
 
     /**

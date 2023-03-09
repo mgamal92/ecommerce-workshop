@@ -27,7 +27,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('carts', CartController::class);
     Route::resource('checkout', CheckoutController::class);
-    Route::resource('payments', PaymentController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('customers', CustomerController::class);
@@ -42,6 +41,21 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::post('assign-role/users/{user}/roles/{role}', 'assignRole');
 
             Route::post('remove-role/users/{user}/roles/{role}', 'dropRole');
+        });
+    });
+
+
+    Route::controller(PaymentController::class)->prefix('payment/paymob/')->group(function () {
+
+        // payment transaction callback
+        Route::post('processing', 'processed');
+
+        Route::prefix('callback/')->group(function () {
+
+            //handle transaction callback
+            Route::post('transaction', 'transaction');
+            //handle response callback 
+            Route::get('response', 'response');
         });
     });
 });
