@@ -31,11 +31,7 @@ class OrderController extends Controller
     public function index()
     {
         //List Orders
-        return OrdersResource::collection($this->orderService->retrieve($this->model));
-
-        // $order = Order::with('items')->whereOrderId(105995702)->get();
-
-        // return $order->items();
+        return OrdersResource::collection($this->orderService->retrieveWithItems());
     }
 
     /**

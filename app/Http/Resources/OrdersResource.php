@@ -30,8 +30,8 @@ class OrdersResource extends JsonResource
             'shipping_fees' => $this->shipping_fees,
             'total_amount' => $this->total_amount,
             'order_id' => $this->order_id,
-            'order_items' => OrderItemsResource::collection($this->orderItems),
-            'user_id',
+            'user_id' => $this->user_id,
+            'order_items' => OrderItemsResource::collection($this->items),
             'attributes' => [
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
