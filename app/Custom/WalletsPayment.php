@@ -16,6 +16,6 @@ class WalletsPayment implements PaymentFlow
             ],
             "payment_token" => $token
         ];
-        return Http::acceptJson()->post(env('PAYMOB_WALLETS_URL'), $json)->collect();
+        return Http::acceptJson()->post(config('paymob.keys.PAYMOB_WALLETS_URL'), $json)->collect();
     }
 }

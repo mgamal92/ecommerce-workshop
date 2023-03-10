@@ -28,7 +28,7 @@ class PaymentService
         $json = [
             'api_key' => config('paymob.auth.api_key')
         ];
-        $response = Http::post(env('PAYMOB_AUTH_URL'), $json)->object();
+        $response = Http::post(config('paymob.keys.PAYMOB_AUTH_URL'), $json)->object();
 
         return $response->token;
     }
@@ -43,7 +43,7 @@ class PaymentService
 
         $request->mergeIfMissing(['auth_token' => $token]);
 
-        $response =  Http::acceptJson()->post(env('PAYMOB_BASE_URL'), $request)->collect();
+        $response =  Http::acceptJson()->post(config('paymob.keys.PAYMOB_BASE_URL'), $request)->collect();
 
         if (count($response) == 0) {
             return $this->error(null, "no response", 404);
@@ -102,7 +102,7 @@ class PaymentService
                 "state" => $regisResponse['shipping_data']['apartment'],
             ],
         ];
-        $response = Http::acceptJson()->post(env('PAYMOB_PAYMENT_URL'), $json);
+        $response = Http::acceptJson()->post(config('paymob.keys.PAYMOB_PAYMENT_URL'), $json);
 
         return $response['token'];
     }

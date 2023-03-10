@@ -8,6 +8,6 @@ class CardPayment implements PaymentFlow
 {
     public function buildUrl(string $token, $phoneNumber = null)
     {
-        return env('PAYMOB_IFRAME_URL') . env('PAYMOB_CARD_IFRAME_ID') . "?payment_token=$token";
+        return config('paymob.keys.PAYMOB_IFRAME_URL') . config('paymob.keys.PAYMOB_CARD_IFRAME_ID') . "?payment_token=$token";
     }
 }
