@@ -12,7 +12,6 @@ class PaymentControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
-    private Order $order;
 
     //setup to run before each test method
     protected function setUp(): void
@@ -20,7 +19,6 @@ class PaymentControllerTest extends TestCase
         parent::setUp();
 
         $this->user = User::factory()->create();
-        $this->order = Order::factory()->create();
     }
 
 
