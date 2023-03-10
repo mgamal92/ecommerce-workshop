@@ -27,6 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('carts', CartController::class);
     Route::resource('checkout', CheckoutController::class);
+    Route::get('checkout', [CheckoutController::class,'checkout'])->name('checkout');
     Route::resource('payments', PaymentController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('orders', OrderController::class);
