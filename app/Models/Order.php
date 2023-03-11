@@ -12,8 +12,8 @@ class Order extends Model
     const STATUS_SUCCESSFUL = 1;
     const  STATUS_PENDING = 0;
     const STATUS_FAILED = 2;
-    const CARD_PAYMENT = 0;
-    const VODAFONE_PAYMENT = 1;
+    const CARD_PAYMENT = 'card';
+    const WALLET_PAYMENT = 'wallet';
 
     protected $fillable = [
         'order_id',

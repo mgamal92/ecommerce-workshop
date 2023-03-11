@@ -22,12 +22,7 @@ class PaymentController extends Controller
      */
     public function processed(Request $request)
     {
-        if ($request->payment_method == Order::CARD_PAYMENT) {
-
-            return $this->service->proceedToPayment(new CardPayment, $request);
-        }
-
-        return $this->service->proceedToPayment(new WalletsPayment, $request);
+        return $this->service->processPayment($request);
     }
 
     /**

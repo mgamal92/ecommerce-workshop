@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('apartment')->nullable();
             $table->text('additional_info')->nullable();
             $table->string('phone');
-            $table->smallInteger('payment_method');
+            $table->string('payment_method');
             $table->float('shipping_fees', 8, 2);
             $table->float('total_amount', 8, 2);
             $table->timestamps();

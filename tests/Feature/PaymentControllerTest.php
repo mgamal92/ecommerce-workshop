@@ -30,7 +30,7 @@ class PaymentControllerTest extends TestCase
             "currency" => "EGP",
             "shipping_fees" => 22,
             "total_amount" => 30,
-            "payment_method" => 1,
+            "payment_method" => 'card',
             "items" => [],
             "shipping_data" => [
                 "email" => "claudette09@exa.com",

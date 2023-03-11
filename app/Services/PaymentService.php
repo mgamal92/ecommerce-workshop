@@ -14,11 +14,15 @@ class PaymentService
 {
     use HttpResponses;
 
-    // applying polymorphic object
-    public function proceedToPayment(PaymentFlow $payment, Request $request)
+    public function __construct(protected PaymentFlow $gateway)
     {
-        return $payment->buildUrl($this->makePayment($request), $request->shipping_data['phone_number']);
     }
+
+    public function processPayment(Request $request)
+    {
+        return $this->gateway->buildUrl($this->makePayment($request), $request->shipping_data['phone_number']);
+    }
+
 
     /**
      * First: Paymob Authentication.
