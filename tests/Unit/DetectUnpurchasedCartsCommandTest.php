@@ -25,7 +25,7 @@ class DetectUnpurchasedCartsCommandTest extends TestCase
     public function testDetectUnpurchasedCartsCommand()
     {
         // $command = new DetectUnpurchasedCartsCommand();
-
+        User::factory()->create();
         $cart = Cart::factory()->create([
             // 'user_id' => User::select('id')->inRandomOrder()->first()->id,
             // 'offer_sent' => 0,
