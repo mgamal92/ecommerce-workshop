@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\CustomerAuth;
 
 use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;

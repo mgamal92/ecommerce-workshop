@@ -26,13 +26,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
     Route::resource('products', ProductController::class);
-    Route::resource('carts', CartController::class);
-    Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart']);
     Route::resource('checkout', CheckoutController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('orders', OrderController::class);
     Route::resource('customers', CustomerController::class);
+
+
+    Route::middleware(['auth:customer'])->group(function () {
+        Route::resource('carts', CartController::class);
+        Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart']);
+    });
 
     //user roles
     Route::middleware(['role:super-admin'])->group(function () {
@@ -47,3 +51,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 });
+
+
+require __DIR__ . '/auth.php';
+require __DIR__ . '/authCustomer.php';

@@ -3,7 +3,9 @@
 namespace App\Http\Requests\CustomerAuth;
 
 use Illuminate\Auth\Events\Lockout;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
@@ -32,6 +34,18 @@ class LoginRequest extends FormRequest
             'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        $errors = $validator->errors();
+
+        $response = response()->json([
+            'message' => 'Invalid data send',
+            'details' => $errors->messages(),
+        ], 422);
+
+        throw new HttpResponseException($response);
     }
 
     /**

@@ -9,6 +9,7 @@ use App\Services\ProductService;
 use App\Services\CartService;
 use App\Traits\HttpResponses;
 use App\Models\Cart;
+use Illuminate\Support\Facades\Auth;
 
 
 class CartController extends Controller
@@ -49,6 +50,7 @@ class CartController extends Controller
     // add product to cart
     public function addToCart(AddToCartRequest $request, $product_id)
     {
+        //return Auth::guard('cutomer')->user();
         $product = $this->productService->checkIfProductExist($product_id);
         if($product) {
             $product_has_enough_quantity = $this->productService->checkQuantity($request->quantity, $product);

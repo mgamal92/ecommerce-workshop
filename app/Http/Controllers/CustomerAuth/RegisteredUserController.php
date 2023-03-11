@@ -3,14 +3,17 @@
 namespace App\Http\Controllers\CustomerAuth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CustomerAuth\RegisterRequest;
 use App\Http\Resources\CustomersResource;
 use App\Models\Customer;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
 class RegisteredUserController extends Controller
 {
+    use HttpResponses;
     /**
      * Handle an incoming registration request.
      *
@@ -19,14 +22,8 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request)
+    public function store(RegisterRequest $request)
     {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . Customer::class],
-            'password' => ['required', 'confirmed', Password::defaults()],
-        ]);
-
         $customer = Customer::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -34,9 +31,7 @@ class RegisteredUserController extends Controller
         ]);
 
         return (new CustomersResource($customer))->additional([
-            'data' => [
-                'token' => $customer->createToken("API Token of " . $customer->email)->plainTextToken
-            ]
+            'token' => $customer->createToken('customerToken')->plainTextToken,
         ]);
     }
 }

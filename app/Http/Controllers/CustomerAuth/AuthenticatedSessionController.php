@@ -21,18 +21,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        $request->validated();
-
         if (!Auth::guard('customer')->attempt($request->only('email', 'password'))) {
             return $this->error(null, 'Credentials does not match', 401);
         }
 
-        $customer = Customer::whereEmail($request->email)->first();
+        $customer = Customer::where('email', $request->email)->first();
 
         return (new CustomersResource($customer))->additional([
-            'data' => [
-                'token' => $customer->createToken('API token of ' . $customer->email)->plainTextToken
-            ]
+            'token' => $customer->createToken('customerToken')->plainTextToken
         ]);
     }
 

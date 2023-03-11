@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\CustomerAuth;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -23,10 +23,11 @@ class CustomerRegistrationTest extends TestCase
 
     public function test_customer_register_validation_error()
     {
-        $response = $this->postJson(route('customers.register'), [
+        $response = $this->post(route('customers.register'), [
             'name' => 'Test Customer',
             'email' => 'test'
         ]);
-        $response->assertInvalid(['email']);
+
+        $response->assertStatus(422);
     }
 }

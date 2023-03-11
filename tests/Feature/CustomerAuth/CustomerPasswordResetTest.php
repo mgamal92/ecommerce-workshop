@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\CustomerAuth;
 
 use App\Models\Customer;
 use App\Notifications\CustomerAuth\ResetPassword;
@@ -18,9 +18,7 @@ class CustomerPasswordResetTest extends TestCase
 
         $customer = Customer::factory()->create();
 
-        $this->withoutExceptionHandling();
-
-        $this->post('customers/forgot-password', ['email' => $customer->email]);
+        $this->post('api/customers/forgot-password', ['email' => $customer->email]);
 
         Notification::assertSentTo($customer, ResetPassword::class);
     }
@@ -34,7 +32,7 @@ class CustomerPasswordResetTest extends TestCase
         $this->post('customers/forgot-password', ['email' => $customer->email]);
 
         Notification::assertSentTo($customer, ResetPassword::class, function ($notification) use ($customer) {
-            $response = $this->post('customers/reset-password', [
+            $response = $this->post('api/customers/reset-password', [
                 'token' => $notification->token,
                 'email' => $customer->email,
                 'password' => 'password',
