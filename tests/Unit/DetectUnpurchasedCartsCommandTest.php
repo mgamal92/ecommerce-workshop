@@ -27,16 +27,14 @@ class DetectUnpurchasedCartsCommandTest extends TestCase
         // $command = new DetectUnpurchasedCartsCommand();
         User::factory()->create();
         $cart = Cart::factory()->create([
-            // 'user_id' => User::select('id')->inRandomOrder()->first()->id,
-            // 'offer_sent' => 0,
             'created_at' => Carbon::yesterday(),
         ]);
         Artisan::call('detect:carts');
         $this->assertTrue(true);
 
-        // Artisan::call('queue:work');
-        // Queue::assertPushed(function ($job) {
-        //     return $job === 'Job executed successfully';
-        // });
+        Artisan::call('queue:work');
+        Queue::assertPushed(function ($job) {
+            return $job === 'Job executed successfully';
+        });
     }
 }
