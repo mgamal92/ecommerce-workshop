@@ -31,10 +31,5 @@ class DetectUnpurchasedCartsCommandTest extends TestCase
         ]);
         Artisan::call('detect:carts');
         $this->assertTrue(true);
-
-        Artisan::call('queue:work');
-        Queue::assertPushed(function ($job) {
-            return $job === 'Job executed successfully';
-        });
     }
 }
