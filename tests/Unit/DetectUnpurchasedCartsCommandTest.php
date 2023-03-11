@@ -27,9 +27,7 @@ class DetectUnpurchasedCartsCommandTest extends TestCase
         // $command = new DetectUnpurchasedCartsCommand();
 
         $cart = Cart::factory()->create([
-            'user_id' => User::select('id')->inRandomOrder()->first()->id,
-            'offer_sent' => 0,
-            'created_at' => Carbon::yesterday(),
+            'created_at' => $this->faker->dateTimeBetween('-2 day', '-1 day'),
         ]);
         Artisan::call('detect:carts');
         $this->assertTrue(true);
