@@ -9,13 +9,15 @@ use App\Http\Resources\CheckoutResource;
 use App\Models\Cart;
 use App\Models\Customer;
 use App\Services\CartService;
+use App\Http\Resources\CustomersResource;
+use App\Models\Product;
 class CheckoutController extends Controller
 {
     protected CartService $cartService;
     protected $cart;
     protected $cartId;
-    private $estimatedShipping = 0;
-    private $estimatedTax = 0;
+    private $estimatedShipping = 8;
+    private $estimatedTax = 8;
     public function __construct(CartService $cartService)
     {
         $this->cartService = $cartService;
@@ -29,8 +31,9 @@ class CheckoutController extends Controller
     public function calculateSubTotal($cartId){
         $cart = $this->getCart($cartId);
         $subTotal = 0;
-        foreach($cart->products as $key => $product){
-            $subTotal+=$product['price']*$product['quantity'];
+        foreach($cart->products as $key => $value){
+            $product = Product::where('id',$value['product_id'])->first();
+            $subTotal+=$product['price']*$value['quantity'];
         }
         return $subTotal;  
     }
@@ -44,11 +47,19 @@ class CheckoutController extends Controller
         return $total;
     }
     public function checkout(){
-        $customer = Customer::where('id',$this->cart->customer_id)->first();
+        $customer = new CustomersResource(Customer::where('id',$this->cart->customer_id)->first());
         $cartItems = new CartsResource($this->cart);
         $subTotal = $this->calculateSubTotal($this->cartId);
         $taxes = $this->calculateTaxes($this->cartId);
         $total = $this->calculateTotal($this->cartId);
-        return new CheckoutResource($customer,$cartItems,$subTotal,$taxes,$total);
+        $summary = [
+            'customer'      =>  $customer,
+            'cart_items'    =>  $cartItems,
+            'sub_total'     =>  $subTotal,
+            'taxes'         =>  $taxes,
+            'total'         =>  $total
+        ];
+        
+        return $summary;
     }   
 }
