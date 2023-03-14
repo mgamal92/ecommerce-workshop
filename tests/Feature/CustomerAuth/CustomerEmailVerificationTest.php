@@ -28,7 +28,7 @@ class CustomerEmailVerificationTest extends TestCase
             ['id' => $customer->id, 'hash' => sha1($customer->email)]
         );
 
-        $response = $this->actingAs($customer, 'customer')->get($verificationUrl);
+        $response = $this->actingAs($customer, 'api-customer')->get($verificationUrl);
 
         Event::assertDispatched(Verified::class);
         $this->assertTrue($customer->fresh()->hasVerifiedEmail());
@@ -47,7 +47,7 @@ class CustomerEmailVerificationTest extends TestCase
             ['id' => $customer->id, 'hash' => sha1('wrong-email')]
         );
 
-        $this->actingAs($customer, 'customer')->get($verificationUrl);
+        $this->actingAs($customer, 'api-customer')->get($verificationUrl);
 
         $this->assertFalse($customer->fresh()->hasVerifiedEmail());
     }

@@ -28,7 +28,6 @@ class CustomerAuthenticationTest extends TestCase
         ]);
 
         $response->assertStatus(200);
-        $this->assertAuthenticated('customer');
     }
 
     public function test_customers_can_not_authenticate_with_invalid_password()

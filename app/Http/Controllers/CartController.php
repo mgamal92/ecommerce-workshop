@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\AddToCartRequest;
+use App\Http\Requests\CartRequest;
 use App\Http\Resources\CartsResource;
 use App\Services\ProductService;
 use App\Services\CartService;
 use App\Traits\HttpResponses;
 use App\Models\Cart;
-use Illuminate\Support\Facades\Auth;
-
 
 class CartController extends Controller
 {
@@ -35,22 +33,15 @@ class CartController extends Controller
     {
         $cart = $this->cartService->retrieve($this->model);
         return $cart
-            ? $this->success(CartsResource::collection($cart),'cart items list')
+            ? $this->success(new CartsResource($cart),'cart items list')
             : $this->error(null, 'No Cart Items Found', 404);
     }
 
-    /**
-     * create cart in not exist.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
+    /*******************************
     // add product to cart
-    public function addToCart(AddToCartRequest $request, $product_id)
+    /*******************************/
+    public function addToCart(CartRequest $request, $product_id)
     {
-        //return Auth::guard('cutomer')->user();
         $product = $this->productService->checkIfProductExist($product_id);
         if($product) {
             $product_has_enough_quantity = $this->productService->checkQuantity($request->quantity, $product);
@@ -63,14 +54,51 @@ class CartController extends Controller
         return $this->error(null, 'Product doesn\'t exist', 404);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Cart  $cart
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Cart $cart)
+    /*******************************
+    // remove product from cart
+    /*******************************/
+    public function removeFromCart($product_id)
     {
-        //
+        $product = $this->productService->checkIfProductExist($product_id);
+        if($product) {
+            return $this->cartService->checkIfProductExistInCart($product->id)
+                ? $this->cartService->removeFromCart($product)
+                : $this->error(null, 'Product doesn\'t exist in cart', 404);
+        }
+
+        return $this->error(null, 'Product doesn\'t exist', 404);
+    }
+
+    /***************************************
+    // increase or decrease product in cart
+    /**************************************/
+    public function updateCart(CartRequest $request, $product_id)
+    {
+        $product = $this->productService->checkIfProductExist($product_id);
+        if($this->cartService->checkIfProductExistInCart($product->id)) {
+            if($request->quantity > $this->cartService->getProductquantityInCart($product->id)) {
+                $product_has_enough_quantity = $this->productService->checkQuantity($request->quantity, $product);
+                return $product_has_enough_quantity
+                    ? $this->cartService->increaseQuantity($product->id, $request->quantity)
+                    : $this->error(null, 'Product doesn\'t have enough quantity', 404);
+            }
+            elseif($request->quantity < $this->cartService->getProductquantityInCart($product->id)) {
+                return $this->cartService->decreaseQuantity($product->id, $request->quantity);
+            }
+
+            return $this->success(new CartsResource($this->cartService->retrieve($this->model)),'cart items list');
+        }
+
+        return $this->error(null, 'Product doesn\'t exist in cart', 404);
+    }
+
+    /*******************************
+    // clear cart
+    /*******************************/
+    public function clear()
+    {
+        return $this->cartService->clearCart()
+            ? $this->success(null, 'Cart deleted successfuly')
+            : $this->error(null, 'Cart doesn\'t exist', 404);
     }
 }

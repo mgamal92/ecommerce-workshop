@@ -88,4 +88,12 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * search for name, price, date and category's name
+     * @param $query
+     */
+    public function search($query)
+    {
+        return $this->productService->search($query);
+    }
 }

@@ -73,4 +73,48 @@ class ProductControllerTest extends TestCase
         ]);
     }
 
+    public function test_search_for_products_by_product_name()
+    {
+        $product = $this->product;
+        $response = $this->actingAs($this->user)->getJson("api/products/search/" . $product->name);
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'name' => $product->name,
+        ]);
+    }
+
+    public function test_search_for_products_by_product_price()
+    {
+        $product = $this->product;
+        $response = $this->actingAs($this->user)->getJson("api/products/search/" . $product->price);
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'price' => (string) $product->price,
+        ]);
+    }
+
+    public function test_search_for_products_by_product_created_at()
+    {
+        $product = $this->product;
+        $response = $this->actingAs($this->user)->getJson("api/products/search/" . $product->created_at);
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'created_at' => $product->created_at,
+        ]);
+    }
+
+    public function test_search_for_products_by_category_name()
+    {
+        $product = $this->product;
+        $response = $this->actingAs($this->user)->getJson("api/products/search/" . $product->category->name);
+        $response->assertStatus(200);
+        //"name" was used because can not use category's name in json format as it was not specified in the ProductResource
+        $response->assertJsonFragment([
+            'name' => $product->name
+        ]);
+    }
+
 }

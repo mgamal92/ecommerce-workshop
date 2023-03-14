@@ -34,20 +34,20 @@ class CartControllerTest extends TestCase
     public function test_the_controller_returns_customer_existing_cart()
     {
         $cart = Cart::factory()->for($this->customer)->create();
-        $response = $this->actingAs($this->customer, 'customer')->getJson('api/carts');
+        $response = $this->actingAs($this->customer, 'api-customer')->getJson('api/carts');
         $response->assertStatus(200);
         $this->assertModelExists($cart);
     }
 
     public function test_the_controller_returns_customer_cart_not_exist()
     {
-        $response = $this->actingAs($this->customer, 'customer')->getJson('api/carts');
+        $response = $this->actingAs($this->customer, 'api-customer')->getJson('api/carts');
         $response->assertStatus(404);
     }
 
     public function test_the_controller_add_existing_product_with_enough_quantity_to_cart()
     {
-        $response = $this->actingAs($this->customer, 'customer')->postJson("api/carts/add-to-cart/{$this->product->id}", [
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/add-to-cart/{$this->product->id}", [
             'quantity' => 1,
         ]);
 
@@ -57,7 +57,7 @@ class CartControllerTest extends TestCase
 
     public function test_the_controller_add_existing_product_without_enough_quantity_to_cart()
     {
-        $response = $this->actingAs($this->customer, 'customer')->postJson("api/carts/add-to-cart/{$this->product->id}", [
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/add-to-cart/{$this->product->id}", [
             'quantity' => random_int(1000000,9999999),
         ]);
 
@@ -67,10 +67,81 @@ class CartControllerTest extends TestCase
 
     public function test_the_controller_add_non_existing_product_to_cart()
     {
-        $response = $this->actingAs($this->customer, 'customer')->postJson("api/carts/add-to-cart/0", [
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/add-to-cart/0", [
             'quantity' => random_int(1,10),
         ]);
 
+        $response->assertStatus(404);
+    }
+
+    public function test_the_controller_remove_existing_product_from_cart()
+    {
+        $cart = Cart::factory()->create([
+            'customer_id' => $this->customer->id,
+            'products' => [
+                ['product_id' => $this->product->id, 'quantity' => random_int(1,10)]
+            ]
+        ]);
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/remove-from-cart/{$this->product->id}", []);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_the_controller_remove_non_existing_product_from_cart()
+    {
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/remove-from-cart/0", []);
+
+        $response->assertStatus(404);
+    }
+
+
+    public function test_the_controller_update_existing_product_in_cart()
+    {
+        $cart = Cart::factory()->create([
+            'customer_id' => $this->customer->id,
+            'products' => [
+                ['product_id' => $this->product->id, 'quantity' => random_int(1,10)]
+            ]
+        ]);
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/remove-from-cart/{$this->product->id}", [
+            'quantity' => random_int(1,10),
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    public function test_the_controller_update_non_existing_product_in_cart()
+    {
+        $cart = Cart::factory()->create([
+            'customer_id' => $this->customer->id,
+            'products' => [
+                ['product_id' => 0, 'quantity' => random_int(1,10)]
+            ]
+        ]);
+
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/update-cart/{$this->product->id}", [
+            'quantity' => random_int(1,10)
+        ]);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_the_controller_update_clear_existing_cart()
+    {
+        $cart = Cart::factory()->create([
+            'customer_id' => $this->customer->id,
+            'products' => [
+                ['product_id' => $this->product->id, 'quantity' => random_int(1,10)]
+            ]
+        ]);
+
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/clear", []);
+        $response->assertStatus(200);
+    }
+
+    public function test_the_controller_clear_non_existing_cart()
+    {
+        $response = $this->actingAs($this->customer, 'api-customer')->postJson("api/carts/clear", []);
         $response->assertStatus(404);
     }
 }

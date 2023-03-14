@@ -33,6 +33,17 @@ class ProductService extends BaseServices
         )->paginate();
     }
 
+    public function search($query)
+    {
+        $products = $this->model->search($query)->paginate();
+
+        if (count($products) == 0) {
+            return $this->error(null, 'no products found', 404);
+        }
+
+        return ProductsResource::collection($products);
+    }
+
     public function checkIfProductExist($id)
     {
         return $this->model->find($id);
