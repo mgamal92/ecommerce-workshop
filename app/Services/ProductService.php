@@ -2,10 +2,14 @@
 
 namespace App\Services;
 
+use App\Http\Resources\ProductsResource;
 use App\Models\Product;
+use App\Traits\HttpResponses;
 
 class ProductService extends BaseServices
 {
+    use HttpResponses;
+
     protected $model;
     protected $cartService;
 
@@ -17,9 +21,9 @@ class ProductService extends BaseServices
 
     public function getAllProducts($model)
     {
-        $currentPage = request()->get('page',1);
-        
-        return cache()->remember('products-'. $currentPage, 60*60*24, function(){
+        $currentPage = request()->get('page', 1);
+
+        return cache()->remember('products-' . $currentPage, 60 * 60 * 24, function () {
             return $this->retrieve($this->model);
         });
     }

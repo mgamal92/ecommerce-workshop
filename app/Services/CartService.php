@@ -32,6 +32,7 @@ class CartService extends BaseServices
                 'products' => [
                     ['product_id' => (int)$product->id, 'quantity' => (int)$quantity],
                 ],
+                'offer_sent' => 0
             ]);
         }
         else {

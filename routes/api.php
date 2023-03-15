@@ -11,6 +11,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,8 +47,8 @@ Route::middleware(['auth:api-user'])->group(function () {
     });
 });
 
-
 Route::middleware(['auth:customer,api-customer'])->group(function () {
+    //search in products
     Route::get('products/search/{query}', [ProductController::class, 'search']);
 
     Route::resource('carts', CartController::class);

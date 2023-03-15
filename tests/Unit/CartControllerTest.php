@@ -4,11 +4,14 @@ namespace Tests\Unit;
 
 use App\Models\Product;
 use App\Services\CartService;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CartControllerTest extends TestCase
 {
-/*
+    use RefreshDatabase;
+
+    /*
     public function test_add_product_to_cart()
     {
         $product = Product::create([
@@ -20,6 +23,7 @@ class CartControllerTest extends TestCase
 
         $cart = (new CartService())->addToCart($product, random_int(1,10));
         $this->assertTrue($cart);
-    }*/
+    }
+    */
 
 }

@@ -3,7 +3,7 @@
 namespace Tests\Feature\CustomerAuth;
 
 use App\Models\Customer;
-use App\Notifications\CustomerAuth\ResetPassword;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Tests\TestCase;
@@ -29,7 +29,7 @@ class CustomerPasswordResetTest extends TestCase
 
         $customer = Customer::factory()->create();
 
-        $this->post('customers/forgot-password', ['email' => $customer->email]);
+        $this->post('api/customers/forgot-password', ['email' => $customer->email]);
 
         Notification::assertSentTo($customer, ResetPassword::class, function ($notification) use ($customer) {
             $response = $this->post('api/customers/reset-password', [

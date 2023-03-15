@@ -30,7 +30,7 @@ class ProductController extends Controller
     {
         $products = $this->productService->getAllProducts($this->model);
         return count($products) > 0
-            ? $this->success(ProductsResource::collection($products),'products list')
+            ? $this->success(ProductsResource::collection($products), 'products list')
             : $this->error(null, 'No Products Found', 404);
     }
 
