@@ -22,7 +22,7 @@ class StaffControllerTest extends TestCase
     {
         $response = $this->actingAs($this->user)->postJson(route('api/staffs'), [
             'name' => 'Staff Member',
-            'email' => 'staff_member1@gmail.com',
+            'email' => 'staff_member@gmail.com',
             'password' => 'password',
             'password_confirmation' => 'password',
         ]);
