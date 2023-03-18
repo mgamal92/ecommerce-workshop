@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Helpers\Helper;
+use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
 class RegisterRequest extends FormRequest
 {

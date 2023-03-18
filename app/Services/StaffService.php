@@ -15,7 +15,7 @@ class StaffService extends BaseServices
         $this->model = new User();
     }
     public function store($model, array $data){
-
+        $data['password'] = Hash::make($data['password']);
         parent::store($this->model, $data);
         $user = User::where('email',$data['email'])->first();
 
