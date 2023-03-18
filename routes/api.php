@@ -23,15 +23,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::resource('categories', CategoryController::class);
-    Route::resource('products', ProductController::class);
     Route::resource('carts', CartController::class);
     Route::resource('checkout', CheckoutController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('invoices', InvoiceController::class);
-    Route::resource('orders', OrderController::class);
+    
+    //admin route
+    Route::middleware(['role:admin'])->group(function () {
+    Route::resource('categories', CategoryController::class);
+    Route::resource('products', ProductController::class);
     Route::resource('customers', CustomerController::class);
-
+    Route::resource('orders', OrderController::class);
+    });    
+    
     //user roles
     Route::middleware(['role:super-admin'])->group(function () {
 
