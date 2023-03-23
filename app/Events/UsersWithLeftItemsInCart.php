@@ -25,7 +25,7 @@ class UsersWithLeftItemsInCart
      */
     public function __construct()
     {
-        $carts = Cart::with('user')
+        $carts = Cart::with('customer')
                     ->whereDate( 'created_at', '<=', \Carbon\Carbon::yesterday()->toDateTimeString())
                     ->where('offer_sent', '0')
                     ->get();

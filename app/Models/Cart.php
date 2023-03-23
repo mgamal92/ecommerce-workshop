@@ -9,9 +9,15 @@ class Cart extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['customer_id', 'products', 'offer_sent'];
 
-    public function user()
+    protected $casts = [
+        'products' => 'array'
+    ];
+
+    public function customer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Customer::class);
     }
+
 }

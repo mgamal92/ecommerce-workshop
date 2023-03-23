@@ -3,12 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Providers\RouteServiceProvider;
+use App\Traits\HttpResponses;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
 {
+    use HttpResponses;
     /**
      * Handle an incoming request.
      *
@@ -24,6 +26,7 @@ class RedirectIfAuthenticated
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 return redirect(RouteServiceProvider::HOME);
+               // return Auth::guard($guard)->user();
             }
         }
 

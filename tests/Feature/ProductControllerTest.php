@@ -116,4 +116,5 @@ class ProductControllerTest extends TestCase
             'name' => $product->name
         ]);
     }
+
 }

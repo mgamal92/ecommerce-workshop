@@ -11,10 +11,12 @@ class ProductService extends BaseServices
     use HttpResponses;
 
     protected $model;
+    protected $cartService;
 
-    public function __construct()
+    public function __construct(CartService $cartService)
     {
         $this->model = new Product();
+        $this->cartService = $cartService;
     }
 
     public function getAllProducts($model)
@@ -44,5 +46,16 @@ class ProductService extends BaseServices
         }
 
         return ProductsResource::collection($products);
+    }
+
+    public function checkIfProductExist($id)
+    {
+        return $this->model->find($id);
+    }
+
+    public function checkQuantity($quantity, Product $product)
+    {
+        $qty = $quantity + $this->cartService->getProductquantityInCart($product->id);
+        return $qty > 0 && $qty <= $product->quantity;
     }
 }

@@ -18,7 +18,7 @@ class SendOfferEmail implements ShouldQueue
     public function handle(UsersWithLeftItemsInCart $event)
     {
         foreach($event->carts as $cart) {
-            $email = $cart->user->email;
+            $email = $cart->customer->email;
             dispatch(new DetectUnpurchasedCarts($email));
         }
 

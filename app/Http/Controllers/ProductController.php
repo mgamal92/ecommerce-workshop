@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
 use App\Models\Product;
 use App\Services\ProductService;
 use App\Traits\HttpResponses;
-use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     use HttpResponses;
 
     protected ProductService $productService;
-
     protected $model;
 
     public function __construct(ProductService $productService)
