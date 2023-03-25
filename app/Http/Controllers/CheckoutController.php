@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CheckoutService;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class CheckoutController extends Controller
 {
-    public function index(): Response
+    public function __construct(protected CheckoutService $service)
     {
-        return response(Response::HTTP_OK);
+    }
+    public function index()
+    {
+        return $this->service->summary();
     }
 }

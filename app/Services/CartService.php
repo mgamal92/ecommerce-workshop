@@ -4,10 +4,13 @@ namespace App\Services;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Traits\Helpers;
 use Illuminate\Support\Facades\Auth;
 
 class CartService extends BaseServices
 {
+    use Helpers;
+
     protected $model;
     protected $cart;
     protected $customer;
@@ -26,16 +29,20 @@ class CartService extends BaseServices
 
     public function addToCart(Product $product, $quantity)
     {
-        if(!$this->cart) {
+        if (!$this->cart) {
             $this->cart = $this->store($this->model, [
                 'customer_id' => Auth::guard('api-customer')->user()->id,
                 'products' => [
-                    ['product_id' => (int)$product->id, 'quantity' => (int)$quantity],
+                    [
+                        'product_id' => (int)$product->id,
+                        'quantity' => (int)$quantity,
+                        'item_price' => (float) $product->price,
+                        'subtotal' => $this->num_format((float) $product->price * $quantity)
+                    ],
                 ],
                 'offer_sent' => 0
             ]);
-        }
-        else {
+        } else {
             $this->increaseOrAppendToCart($product, $quantity);
         }
 
@@ -45,14 +52,14 @@ class CartService extends BaseServices
     public function removeFromCart(Product $product)
     {
         $cart_products = $this->cart->products;
-        foreach($this->cart->products as $key => $prod) {
-            if($prod['product_id'] == $product->id) {
+        foreach ($this->cart->products as $key => $prod) {
+            if ($prod['product_id'] == $product->id) {
                 unset($cart_products[$key]);
                 break;
             }
         }
 
-        if(count($cart_products) == 0) {
+        if (count($cart_products) == 0) {
             $this->clearCart();
         }
 
@@ -70,15 +77,16 @@ class CartService extends BaseServices
     {
         $this->checkIfProductExistInCart($product->id)
             ? $this->increaseQuantity($product->id, $quantity)
-            : $this->appendProductToCart($product->id, $quantity);
+            : $this->appendProductToCart($product->id, $quantity, $product->price);
     }
 
     public function increaseQuantity($product_id, $quantity)
     {
         $cart_products = $this->cart->products;
-        foreach($this->cart->products as $key => $product) {
-            if($product['product_id'] == $product_id) {
-                $cart_products[$key]['quantity'] += $quantity;
+        foreach ($this->cart->products as $key => $product) {
+            if ($product['product_id'] == $product_id) {
+                $qty = $cart_products[$key]['quantity'] += $quantity;
+                $cart_products[$key]['subtotal'] = $this->num_format((float) $cart_products[$key]['item_price'] * $qty);
                 break;
             }
         }
@@ -89,9 +97,10 @@ class CartService extends BaseServices
     public function decreaseQuantity($product_id, $quantity)
     {
         $cart_products = $this->cart->products;
-        foreach($this->cart->products as $key => $product) {
-            if($product['product_id'] == $product_id) {
-                $cart_products[$key]['quantity'] -= $quantity;
+        foreach ($this->cart->products as $key => $product) {
+            if ($product['product_id'] == $product_id) {
+                $qty = $cart_products[$key]['quantity'] -= $quantity;
+                $cart_products[$key]['subtotal'] = $this->num_format((float) $cart_products[$key]['item_price'] * $qty);
                 break;
             }
         }
@@ -99,10 +108,15 @@ class CartService extends BaseServices
         return $this->cart;
     }
 
-    public function appendProductToCart($product_id, $quantity)
+    public function appendProductToCart($product_id, $quantity, $price)
     {
         $cart_products = $this->cart->products;
-        $cart_products[] = ['product_id' => (int)$product_id, 'quantity' => (int)$quantity];
+        $cart_products[] = [
+            'product_id' => (int)$product_id,
+            'quantity' => (int)$quantity,
+            'item_price' => (float) $price,
+            'subtotal' => $this->num_format((float) $price * $quantity)
+        ];
 
         $this->cart->update(['products' => $cart_products]);
     }
@@ -120,5 +134,4 @@ class CartService extends BaseServices
         $cart_has_product = $this->checkIfProductExistInCart($product_id);
         return $cart_has_product ? $cart_has_product['quantity'] : 0;
     }
-
 }

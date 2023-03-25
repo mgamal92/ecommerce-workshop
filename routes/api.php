@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('categories', CategoryController::class)->except('destroy');
     Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
@@ -82,11 +83,12 @@ Route::middleware(['auth:customer,api-customer'])->group(function () {
     Route::get('products/search/{query}', [ProductController::class, 'search']);
 
     Route::resource('carts', CartController::class);
-    Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart']);
+    Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart'])->name('add.cart');
     Route::post('carts/update-cart/{product_id}', [CartController::class, 'updateCart']);
     Route::post('carts/remove-from-cart/{product_id}', [CartController::class, 'removeFromCart']);
     Route::post('carts/clear', [CartController::class, 'clear']);
     Route::resource('customers', CustomerController::class)->except('index');
+    Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 });
 
 
