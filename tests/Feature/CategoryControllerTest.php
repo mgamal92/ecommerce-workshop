@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
@@ -79,6 +80,8 @@ class CategoryControllerTest extends TestCase
     public function test_the_controller_delete_category()
     {
         $category = $this->category;
+        $role = Role::create(['name' => 'admin']);
+        $this->user->assignRole($role->name);
         $response = $this->actingAs($this->user)->deleteJson("api/categories/{$category->id}");
         $response->assertStatus(200);
         $this->assertDatabaseMissing('categories', [

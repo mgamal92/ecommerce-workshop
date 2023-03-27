@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class CustomerControllerTest extends TestCase
@@ -63,6 +64,8 @@ class CustomerControllerTest extends TestCase
     public function test_the_controller_delete_customer()
     {
         $customer = $this->customer;
+        $role = Role::create(['name' => 'admin']);
+        $this->user->assignRole($role->name);
         $response = $this->actingAs($this->user)->deleteJson("api/customers/{$customer->id}");
         $response->assertStatus(200);
         $this->assertDatabaseMissing('customers', [
