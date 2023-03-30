@@ -6,6 +6,8 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
@@ -137,4 +139,18 @@ class ProductControllerTest extends TestCase
         ]);
     }
 
+    public function test_importing_csv_file_of_products_to_database()
+    {
+        Storage::fake('uploads');
+
+        $header = 'category_id,name,quantity,price';
+        $row1 = '1,test 1, 3, 50';
+        $row2 = '1,test 2, 3, 50';
+
+        $content = implode("\n", [$header, $row1, $row2]);
+        $response = $this->actingAs($this->user)->postJson("api/products/import-csv-file", [
+            'file' => UploadedFile::fake()->createWithContent('test.csv',$content)
+        ]);
+        $response->assertStatus(200);
+    }
 }

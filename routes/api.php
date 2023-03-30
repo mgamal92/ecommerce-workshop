@@ -27,6 +27,7 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
     Route::resource('products', ProductController::class);
+    Route::post('products/import-csv-file', [ProductController::class, 'importCsvFile']);
     Route::resource('checkout', CheckoutController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('orders', OrderController::class);

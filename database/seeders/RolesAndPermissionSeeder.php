@@ -37,6 +37,7 @@ class RolesAndPermissionSeeder extends Seeder
             'create-products',
             'update-products',
             'delete-products',
+            'import-csv-products',
             'list-categories',
             'show-categories',
             'create-categories',

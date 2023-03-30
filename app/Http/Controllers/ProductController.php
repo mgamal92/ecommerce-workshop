@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportCsvRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
+use App\Jobs\ProductsImportCsvJob;
 use App\Models\Product;
 use App\Services\ProductService;
 use App\Traits\HttpResponses;
@@ -22,6 +24,7 @@ class ProductController extends Controller
         $this->middleware('permission:'.Permission::CREATE_PRODUCTS)->only('store');
         $this->middleware('permission:'.Permission::UPDATE_PRODUCTS)->only('update');
         $this->middleware('permission:'.Permission::DELETE_PRODUCTS)->only('destroy');
+        $this->middleware('permission:'.Permission::IMPORT_CSV_PRODUCTS)->only('importCsvFile');
 
         $this->productService = $productService;
         $this->model = new Product;
@@ -101,5 +104,11 @@ class ProductController extends Controller
     public function search($query)
     {
         return $this->productService->search($query);
+    }
+
+    //import csv file
+    public function importCsvFile(ImportCsvRequest $request) {
+        $this->productService->importCsvFile($request->file);
+        return $this->productService->retrieve($this->model);
     }
 }
