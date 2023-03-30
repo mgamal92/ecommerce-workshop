@@ -19,7 +19,7 @@ class CategoryController extends Controller
 
     public function __construct(CategoryService $categoryService)
     {
-        $this->middleware('permission:'.Permission::LIST_CATEGORIES)->only('index', 'show');
+        $this->middleware('permission:'.Permission::LIST_CATEGORIES)->only('index', 'show', 'showWithProducts');
         $this->middleware('permission:'.Permission::CREATE_CATEGORIES)->only('store');
         $this->middleware('permission:'.Permission::UPDATE_CATEGORIES)->only('update');
         $this->middleware('permission:'.Permission::DELETE_CATEGORIES)->only('destroy');

@@ -6,6 +6,9 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
@@ -20,8 +23,25 @@ class CategoryControllerTest extends TestCase
     {
         parent::setUp();
 
+        $this->setupPermissions();
+
         $this->user = User::factory()->create();
+        $this->user->assignRole('admin');
+
         $this->category = Category::factory()->create();
+    }
+
+    protected function setupPermissions()
+    {
+        Permission::findOrCreate('list-categories');
+        Permission::findOrCreate('create-categories');
+        Permission::findOrCreate('update-categories');
+        Permission::findOrCreate('delete-categories');
+
+        Role::findOrCreate('admin')
+            ->givePermissionTo(['list-categories', 'create-categories', 'update-categories', 'delete-categories']);
+
+        $this->app->make(PermissionRegistrar::class)->registerPermissions();
     }
 
     /* 

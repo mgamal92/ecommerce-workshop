@@ -6,6 +6,9 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
@@ -21,9 +24,26 @@ class ProductControllerTest extends TestCase
     {
         parent::setUp();
 
+        $this->setupPermissions();
+
         $this->user = User::factory()->create();
+        $this->user->assignRole('admin');
+
         $this->category = Category::factory()->create();
         $this->product = Product::factory()->create();
+    }
+
+    protected function setupPermissions()
+    {
+        Permission::findOrCreate('list-products');
+        Permission::findOrCreate('create-products');
+        Permission::findOrCreate('update-products');
+        Permission::findOrCreate('delete-products');
+
+        Role::findOrCreate('admin')
+            ->givePermissionTo(['list-products', 'create-products', 'update-products', 'delete-products']);
+
+        $this->app->make(PermissionRegistrar::class)->registerPermissions();
     }
 
     public function test_the_controller_returns_all_products_successfully()
