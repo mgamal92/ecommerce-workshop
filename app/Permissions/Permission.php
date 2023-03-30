@@ -1,3 +1,5 @@
+<?php
+
 namespace App\Permissions;
 
 class Permission
