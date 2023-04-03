@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ImportCsvRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
-use App\Jobs\ProductsImportCsvJob;
 use App\Models\Product;
 use App\Services\ProductService;
 use App\Traits\HttpResponses;
-Use App\Permissions\Permission;
 
 class ProductController extends Controller
 {
@@ -20,12 +18,6 @@ class ProductController extends Controller
 
     public function __construct(ProductService $productService)
     {
-        $this->middleware('permission:'.Permission::LIST_PRODUCTS)->only('index', 'show', 'show');
-        $this->middleware('permission:'.Permission::CREATE_PRODUCTS)->only('store');
-        $this->middleware('permission:'.Permission::UPDATE_PRODUCTS)->only('update');
-        $this->middleware('permission:'.Permission::DELETE_PRODUCTS)->only('destroy');
-        $this->middleware('permission:'.Permission::IMPORT_CSV_PRODUCTS)->only('importCsvFile');
-
         $this->productService = $productService;
         $this->model = new Product;
     }

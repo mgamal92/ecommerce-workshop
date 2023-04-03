@@ -8,7 +8,6 @@ use App\Http\Resources\CategoryProductsResource;
 use App\Models\Category;
 use App\Services\CategoryService;
 use App\Traits\HttpResponses;
-Use App\Permissions\Permission;
 
 class CategoryController extends Controller
 {
@@ -19,11 +18,6 @@ class CategoryController extends Controller
 
     public function __construct(CategoryService $categoryService)
     {
-        $this->middleware('permission:'.Permission::LIST_CATEGORIES)->only('index', 'show', 'showWithProducts');
-        $this->middleware('permission:'.Permission::CREATE_CATEGORIES)->only('store');
-        $this->middleware('permission:'.Permission::UPDATE_CATEGORIES)->only('update');
-        $this->middleware('permission:'.Permission::DELETE_CATEGORIES)->only('destroy');
-
         $this->categoryService = $categoryService;
         $this->model = new Category();
     }
