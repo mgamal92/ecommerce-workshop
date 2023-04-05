@@ -68,7 +68,7 @@ class ProductControllerTest extends TestCase
     {
         $product = $this->product;
         $response = $this->actingAs($this->user, 'api-user')->postJson('api/products', [
-            'category_id' => $this->product->category_id,
+            'category_id' => $this->category->id,
             'name' => $this->product->name,
             'quantity' => $this->product->quantity,
             'price' => $this->product->price,

@@ -20,7 +20,7 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->text(10),
             'quantity' => fake()->numberBetween(1, 20),
-            'category_id' => Category::select('id')->inRandomOrder()->first()->id,
+            'category_id' => Category::factory(),
             'price' => fake()->randomFloat(1, 20, 30)
         ];
     }

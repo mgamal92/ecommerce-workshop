@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class ProductsImportCsvJob implements ShouldQueue
 {
@@ -36,7 +37,13 @@ class ProductsImportCsvJob implements ShouldQueue
     {
         foreach ($this->data as $product) {
             $product_csv_data = array_combine($this->header,$product);
-            Product::create($product_csv_data);
+            //Product::create($product_csv_data);
+
+            DB::table('products')->upsert(
+                $product_csv_data,
+                ['category_id', 'name'], 
+                ['quantity', 'price']
+            );
         }
     }
 }
