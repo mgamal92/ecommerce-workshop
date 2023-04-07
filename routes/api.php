@@ -30,7 +30,6 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('products', ProductController::class)->except('destroy');
     Route::resource('checkout', CheckoutController::class);
     Route::resource('invoices', InvoiceController::class);
-    Route::resource('orders', OrderController::class);
     Route::resource('staff/user', StaffController::class)->except(['destroy', 'create']);
     Route::resource('customers', CustomerController::class)->except('destroy');
 
@@ -52,6 +51,7 @@ Route::middleware(['auth:api-user'])->group(function () {
         Route::resource('categories', CategoryController::class)->only('destroy');
         Route::resource('customers', CustomerController::class)->only('destroy');
         Route::resource('staff/user', StaffController::class)->only(['destroy', 'create']);
+        Route::resource('orders', OrderController::class);
     });
 
 

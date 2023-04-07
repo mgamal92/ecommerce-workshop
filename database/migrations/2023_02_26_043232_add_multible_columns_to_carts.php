@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        //TODO discard
         Schema::table('carts', function (Blueprint $table) {
-            $table->smallInteger('offer_sent')->nullable();
+            $table->smallInteger('offer_sent');
         });
     }
 

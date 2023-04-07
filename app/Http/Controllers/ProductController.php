@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\ResourcesFlow;
+use App\Custom\Admin\ProductFlow as AdminProductResources;
+use App\Custom\Editor\ProductFlow as EditorProductResources;
 use Illuminate\Http\Request;
-use App\Http\Resources\ProductsResource;
 use App\Models\Product;
 use App\Services\ProductService;
 use App\Traits\HttpResponses;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -14,11 +18,26 @@ class ProductController extends Controller
 
     protected ProductService $productService;
     protected $model;
+    protected $resource;
+    protected $user;
 
-    public function __construct(ProductService $productService)
+    public function __construct(ProductService $productService, Container $container)
     {
         $this->productService = $productService;
         $this->model = new Product;
+
+        //inject container interface into constructor 
+        $this->middleware(function ($request, $next) use ($container) {
+            $this->user = Auth::user();
+
+            $flowClass = $this->user->hasRole('admin') ? AdminProductResources::class : EditorProductResources::class;
+
+            $container->bind(ResourcesFlow::class, $flowClass);
+
+            $this->resource = $container->make(ResourcesFlow::class);
+
+            return $next($request);
+        });
     }
 
     /**
@@ -28,10 +47,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = $this->productService->getAllProducts($this->model);
-        return count($products) > 0
-            ? $this->success(ProductsResource::collection($products), 'products list')
-            : $this->error(null, 'No Products Found', 404);
+        return $this->resource->index();
     }
 
     /**
@@ -43,9 +59,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         //NOTE no validations applied
-        $product = $this->productService->store($this->model, $request->toArray());
-
-        return new ProductsResource($product);
+        return $this->resource->store($request);
     }
 
     /**
@@ -57,9 +71,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        $updateProduct = $this->productService->update($this->model, $product->id, $request->toArray());
-
-        return new ProductsResource($updateProduct);
+        return $this->resource->update($request, $product);
     }
 
     /**
@@ -70,7 +82,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return new ProductsResource($this->productService->show($this->model, $product->id));
+        return $this->resource->show($product);
     }
 
     /**

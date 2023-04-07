@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\CategoriesResource;
+use App\Custom\Admin\CategoryFlow as AdminCategoryResources;
+use App\Custom\Editor\CategoryFlow as EditorCategoryResources;
 use App\Http\Resources\CategoryProductsResource;
 use App\Models\Category;
 use App\Services\CategoryService;
 use App\Traits\HttpResponses;
+use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -15,11 +18,25 @@ class CategoryController extends Controller
 
     protected CategoryService $categoryService;
     protected $model;
+    protected $resource;
+    protected $user;
 
-    public function __construct(CategoryService $categoryService)
+    public function __construct(CategoryService $categoryService, Container $container)
     {
         $this->categoryService = $categoryService;
         $this->model = new Category();
+
+        $this->middleware(function ($request, $next) use ($container) {
+            $this->user = Auth::user();
+
+            $flowClass = $this->user->hasRole('admin') ? AdminCategoryResources::class : EditorCategoryResources::class;
+
+            $container->bind(ResourcesFlow::class, $flowClass);
+
+            $this->resource = $container->make(ResourcesFlow::class);
+
+            return $next($request);
+        });
     }
 
     /**
@@ -30,7 +47,7 @@ class CategoryController extends Controller
     public function index()
     {
         //return all categories
-        return CategoriesResource::collection($this->categoryService->retrieve($this->model));
+        return $this->resource->index();
     }
 
     /**
@@ -42,9 +59,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //NOTE no validations applied
-        $category = $this->categoryService->store($this->model, $request->toArray());
-
-        return new CategoriesResource($category);
+        return $this->resource->store($request);
     }
 
     /**
@@ -56,9 +71,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        $updateCategory = $this->categoryService->update($this->model, $category->id, $request->toArray());
-
-        return new CategoriesResource($updateCategory);
+        return $this->resource->update($request, $category);
     }
 
     /**
@@ -69,7 +82,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return new CategoriesResource($this->categoryService->show($this->model, $category->id));
+        return $this->resource->show($category);
     }
 
     //show single category with it's products
