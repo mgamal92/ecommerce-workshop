@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RolesResource extends JsonResource
+class PermissionsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,11 +18,9 @@ class RolesResource extends JsonResource
             'id' => (string) $this->id,
             'attributes' => [
                 'name' => $this->name,
-                'guard_name' => $this->guard_name,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
-            ],
-            'permissions' => PermissionsResource::collection($this->permissions),
+            ]
         ];
     }
 }

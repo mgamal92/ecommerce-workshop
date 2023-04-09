@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\PermissionsResource;
 use App\Http\Resources\UsersResource;
 use App\Models\User;
 use App\Traits\HttpResponses;
@@ -12,15 +13,36 @@ class UserRoleService extends BaseServices
 {
     use HttpResponses;
 
-    /**
-     * store new role
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function storeRole(Request $request)
+    protected $model;
+
+    public function __construct()
     {
-        return Role::create(['guard_name' => 'web', 'name' => $request->name]);
+        $this->model = new Role();
+    }
+
+    //store new role
+    public function storeRole($request)
+    {
+        $role = $this->model->create(['guard_name' => $request->guard_name, 'name' => $request->name]);
+        $role->givePermissionTo($request->permissions);
+        return $role;
+    }
+
+    //update new role
+    public function updateRole($id, $request)
+    {
+        $role = $this->model->findOrFail($id);
+        $role->update(['guard_name' => $request->guard_name, 'name' => $request->name]);
+        $role->syncPermissions($request->permissions);
+        return $role;
+    }
+
+    //delete role
+    public function deleteRole($id)
+    {
+        $role = $this->model->findOrFail($id);
+        $role->syncPermissions([]);
+        $role->delete();
     }
 
     /**
@@ -41,7 +63,8 @@ class UserRoleService extends BaseServices
             return (new UsersResource($user))->additional([
                 'data' => [
                     'role' => $role->name,
-                    'message' => 'role has been assigned successfully'
+                    'message' => 'role has been assigned successfully',
+                    'permissions' => PermissionsResource::collection($role->permissions),
                 ]
             ]);
         }
