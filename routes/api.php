@@ -9,7 +9,6 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
-use App\Permissions\PermissionsList;
 use Illuminate\Support\Facades\Route;
 
 
@@ -24,45 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-//routes for all users
-Route::middleware(['auth:api-user,api-customer'])->group(function () {
-
-    //categories routes
-    Route::middleware('permission:'.PermissionsList::LIST_CATEGORIES)->prefix('categories')->group(function () {
-        Route::get('/', [CategoryController::class, 'index']);
-        Route::get('/{category}', [CategoryController::class, 'show']);
-        Route::get('/{id}/products', [CategoryController::class, 'showWithProducts']);
-    });
-
-    //products routes
-    Route::middleware('permission:'.PermissionsList::LIST_PRODUCTS)->prefix('products')->group(function () {
-        Route::get('/', [ProductController::class, 'index']);
-        Route::get('/{product}', [ProductController::class, 'show']);
-        Route::get('/search/{query}', [ProductController::class, 'search']);
-    });
-
-});
-
-
-//routes for admin users
 Route::middleware(['auth:api-user'])->group(function () {
-
-    //categories routes
-    Route::prefix('categories')->controller(CategoryController::class)->group(function () {
-        Route::post('/', 'store')->middleware('permission:'.PermissionsList::CREATE_CATEGORIES);
-        Route::put('/{category}', 'update')->middleware('permission:'.PermissionsList::UPDATE_CATEGORIES);
-        Route::delete('/{category}', 'destroy')->middleware('permission:'.PermissionsList::DELETE_CATEGORIES);
-    });
-
-    //products routes
-    Route::prefix('products')->controller(ProductController::class)->group(function () {
-        Route::post('/', 'store')->middleware('permission:'.PermissionsList::CREATE_PRODUCTS);
-        Route::put('/{product}', 'update')->middleware('permission:'.PermissionsList::UPDATE_PRODUCTS);
-        Route::delete('/{product}', 'destroy')->middleware('permission:'.PermissionsList::DELETE_PRODUCTS);
-        Route::post('/import-csv-file', 'importCsvFile')->middleware('permission:'.PermissionsList::IMPORT_CSV_PRODUCTS);
-    });
-
+    Route::resource('categories', CategoryController::class);
+    Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
+    Route::resource('products', ProductController::class);
     Route::resource('checkout', CheckoutController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('orders', OrderController::class);
@@ -72,8 +36,11 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::middleware(['role:super-admin'])->group(function () {
 
         Route::resource('user/roles', AdminRolesController::class);
+
         Route::controller(AdminRolesController::class)->group(function () {
+
             Route::post('assign-role/users/{user}/roles/{role}', 'assignRole');
+
             Route::post('remove-role/users/{user}/roles/{role}', 'dropRole');
         });
     });
@@ -94,8 +61,10 @@ Route::middleware(['auth:api-user'])->group(function () {
     });
 });
 
-//routes for cusstomers
-Route::middleware(['auth:api-customer'])->group(function () {
+Route::middleware(['auth:customer,api-customer'])->group(function () {
+    //search in products
+    Route::get('products/search/{query}', [ProductController::class, 'search']);
+
     Route::resource('carts', CartController::class);
     Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart']);
     Route::post('carts/update-cart/{product_id}', [CartController::class, 'updateCart']);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ImportCsvRequest;
 use Illuminate\Http\Request;
 use App\Http\Resources\ProductsResource;
 use App\Models\Product;
@@ -96,11 +95,5 @@ class ProductController extends Controller
     public function search($query)
     {
         return $this->productService->search($query);
-    }
-
-    //import csv file
-    public function importCsvFile(ImportCsvRequest $request) {
-        $this->productService->importCsvFile($request->file);
-        return $this->productService->retrieve($this->model);
     }
 }

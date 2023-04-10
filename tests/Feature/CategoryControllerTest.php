@@ -5,11 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
-use App\Permissions\PermissionsList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class CategoryControllerTest extends TestCase
@@ -24,30 +20,8 @@ class CategoryControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupPermissions();
-
         $this->user = User::factory()->create();
-        $this->user->assignRole('admin');
-
         $this->category = Category::factory()->create();
-    }
-
-    protected function setupPermissions()
-    {   
-        Permission::findOrCreate(PermissionsList::LIST_CATEGORIES, 'api-user');
-        Permission::findOrCreate(PermissionsList::CREATE_CATEGORIES, 'api-user');
-        Permission::findOrCreate(PermissionsList::UPDATE_CATEGORIES, 'api-user');
-        Permission::findOrCreate(PermissionsList::DELETE_CATEGORIES, 'api-user');
-
-        Role::findOrCreate('admin', 'api-user')
-            ->givePermissionTo([
-                PermissionsList::LIST_CATEGORIES,
-                PermissionsList::CREATE_CATEGORIES,
-                PermissionsList::UPDATE_CATEGORIES,
-                PermissionsList::DELETE_CATEGORIES,
-            ]);
-
-        $this->app->make(PermissionRegistrar::class)->registerPermissions();
     }
 
     /* 
@@ -67,7 +41,7 @@ class CategoryControllerTest extends TestCase
     public function test_the_controller_create_new_category()
     {
         $category = $this->category;
-        $response = $this->actingAs($this->user, 'api-user')->postJson('api/categories', [
+        $response = $this->actingAs($this->user)->postJson('api/categories', [
             'name' => $this->category->name,
             'products_count' => $this->category->products_count,
         ]);
@@ -81,7 +55,7 @@ class CategoryControllerTest extends TestCase
     public function test_the_controller_update_category()
     {
         $category = $this->category;
-        $response = $this->actingAs($this->user, 'api-user')->putJson("api/categories/{$category->id}", []);
+        $response = $this->actingAs($this->user)->putJson("api/categories/{$category->id}", []);
         $response->assertStatus(200);
         $this->assertModelExists($category);
     }
@@ -105,7 +79,7 @@ class CategoryControllerTest extends TestCase
     public function test_the_controller_delete_category()
     {
         $category = $this->category;
-        $response = $this->actingAs($this->user, 'api-user')->deleteJson("api/categories/{$category->id}");
+        $response = $this->actingAs($this->user)->deleteJson("api/categories/{$category->id}");
         $response->assertStatus(200);
         $this->assertDatabaseMissing('categories', [
             'id' => $category->id,

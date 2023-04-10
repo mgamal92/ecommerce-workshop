@@ -13,8 +13,6 @@ class Customer extends Authenticatable
     use HasFactory;
     use Notifiable;
 
-    protected $guard_name = 'api-customer';
-
     protected $fillable = ['name', 'email', 'password'];
 
     protected $hidden = [

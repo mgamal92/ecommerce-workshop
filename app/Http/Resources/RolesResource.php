@@ -21,8 +21,7 @@ class RolesResource extends JsonResource
                 'guard_name' => $this->guard_name,
                 'created_at' => $this->created_at,
                 'updated_at' => $this->updated_at,
-            ],
-            'permissions' => PermissionsResource::collection($this->permissions),
+            ]
         ];
     }
 }
