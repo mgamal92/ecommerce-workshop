@@ -26,9 +26,9 @@ abstract class CategoryBaseResource implements ResourcesFlow
         return new CategoriesResource($category);
     }
 
-    public function update(Request $request, $category)
+    public function update(Request $request, $model)
     {
-        $updateCategory = $this->service->update($this->category, $category->id, $request->toArray());
+        $updateCategory = $this->service->update($this->category, $model->id, $request->toArray());
 
         return new CategoriesResource($updateCategory);
     }
