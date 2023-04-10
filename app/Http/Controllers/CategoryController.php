@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\ResourcesFlow;
 use App\Custom\Admin\CategoryFlow as AdminCategoryResources;
 use App\Custom\Editor\CategoryFlow as EditorCategoryResources;
 use App\Http\Resources\CategoryProductsResource;
