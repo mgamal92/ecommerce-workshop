@@ -25,7 +25,7 @@ interface ResourcesFlow
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \App\Models $model
+     * @param  $model
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $model);
@@ -33,7 +33,7 @@ interface ResourcesFlow
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models $model
+     * @param $model
      * @return \Illuminate\Http\Response
      */
     public function show($model);
