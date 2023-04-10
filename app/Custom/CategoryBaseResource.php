@@ -33,8 +33,8 @@ abstract class CategoryBaseResource implements ResourcesFlow
         return new CategoriesResource($updateCategory);
     }
 
-    public function show($category)
+    public function show($model)
     {
-        return new CategoriesResource($this->service->show($this->category, $category->id));
+        return new CategoriesResource($this->service->show($this->category, $model->id));
     }
 }
