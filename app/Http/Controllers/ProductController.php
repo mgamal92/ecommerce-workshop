@@ -9,7 +9,6 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Services\ProductService;
 use App\Traits\HttpResponses;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
@@ -21,20 +20,20 @@ class ProductController extends Controller
     protected $resource;
     protected $user;
 
-    public function __construct(ProductService $productService, Container $container)
+    public function __construct(ProductService $productService)
     {
         $this->productService = $productService;
         $this->model = new Product;
 
         //inject container interface into constructor 
-        $this->middleware(function ($request, $next) use ($container) {
+        $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
 
             $flowClass = $this->user->hasRole('admin') ? AdminProductResources::class : EditorProductResources::class;
 
-            $container->bind(ResourcesFlow::class, $flowClass);
+            app()->bind(ResourcesFlow::class, $flowClass);
 
-            $this->resource = $container->make(ResourcesFlow::class);
+            $this->resource = app()->make(ResourcesFlow::class);
 
             return $next($request);
         });

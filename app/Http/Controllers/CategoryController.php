@@ -9,7 +9,6 @@ use App\Http\Resources\CategoryProductsResource;
 use App\Models\Category;
 use App\Services\CategoryService;
 use App\Traits\HttpResponses;
-use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,19 +21,19 @@ class CategoryController extends Controller
     protected $resource;
     protected $user;
 
-    public function __construct(CategoryService $categoryService, Container $container)
+    public function __construct(CategoryService $categoryService)
     {
         $this->categoryService = $categoryService;
         $this->model = new Category();
 
-        $this->middleware(function ($request, $next) use ($container) {
+        $this->middleware(function ($request, $next) {
             $this->user = Auth::user();
 
             $flowClass = $this->user->hasRole('admin') ? AdminCategoryResources::class : EditorCategoryResources::class;
 
-            $container->bind(ResourcesFlow::class, $flowClass);
+            app()->bind(ResourcesFlow::class, $flowClass);
 
-            $this->resource = $container->make(ResourcesFlow::class);
+            $this->resource = app()->make(ResourcesFlow::class);
 
             return $next($request);
         });
