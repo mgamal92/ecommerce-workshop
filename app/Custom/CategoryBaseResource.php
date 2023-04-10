@@ -8,7 +8,7 @@ use App\Models\Category;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
-class CategoryBaseResource implements ResourcesFlow
+abstract class CategoryBaseResource implements ResourcesFlow
 {
     public function __construct(protected CategoryService $service, protected Category $category)
     {

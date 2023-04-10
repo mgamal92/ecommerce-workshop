@@ -9,7 +9,7 @@ use App\Services\ProductService;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 
-class ProductBaseResource implements ResourcesFlow
+abstract class ProductBaseResource implements ResourcesFlow
 {
     use HttpResponses;
 
