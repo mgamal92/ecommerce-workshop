@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateAdminRolesRequest;
-use App\Http\Requests\UpdateAdminRolesRequest;
+use App\Http\Requests\AdminRolesRequest;
 use App\Http\Resources\RolesResource;
 use App\Http\Resources\UsersResource;
 use App\Models\User;
 use App\Services\UserRoleService;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 
 class AdminRolesController extends Controller
@@ -43,16 +41,11 @@ class AdminRolesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateAdminRolesRequest $request)
+    public function store(AdminRolesRequest $request)
     {
-        try {
-            DB::beginTransaction();
-                $role = $this->userRoleService->storeRole($request);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $request->validated();
+
+        $role = $this->userRoleService->storeRole($request);
 
         return new RolesResource($role);
     }
@@ -75,18 +68,12 @@ class AdminRolesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAdminRolesRequest $request, Role $role)
+    public function update(Request $request, Role $role)
     {
-        try {
-            DB::beginTransaction();
-                $role = $this->userRoleService->updateRole($role->id, $request);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
-
-        return new RolesResource($role);
+        $request->validate([
+            'name' => ['required', 'string', 'min:3', "unique:roles,name,$role->id"]
+        ]);
+        return new RolesResource($this->userRoleService->update($this->model, $role->id, $request->toArray()));
     }
 
     /**
@@ -121,15 +108,10 @@ class AdminRolesController extends Controller
      */
     public function destroy(Role $role)
     {
-        try {
-            DB::beginTransaction();
-                $this->userRoleService->deleteRole($role->id);
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
-        }
+        $removeRole = $this->userRoleService->delete($this->model, $role->id);
 
-        return $this->success(null, 'role with it\'s permissions removed successfully');
+        if ($removeRole) {
+            return $this->success(null, 'role removed successfully');
+        }
     }
 }

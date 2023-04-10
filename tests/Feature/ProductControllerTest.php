@@ -5,13 +5,7 @@ namespace Tests\Feature;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\User;
-use App\Permissions\PermissionsList;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
@@ -27,33 +21,9 @@ class ProductControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->setupPermissions();
-
         $this->user = User::factory()->create();
-        $this->user->assignRole('admin');
-
         $this->category = Category::factory()->create();
         $this->product = Product::factory()->create();
-    }
-
-    protected function setupPermissions()
-    {
-        Permission::findOrCreate(PermissionsList::LIST_PRODUCTS, 'api-user');
-        Permission::findOrCreate(PermissionsList::CREATE_PRODUCTS, 'api-user');
-        Permission::findOrCreate(PermissionsList::UPDATE_PRODUCTS, 'api-user');
-        Permission::findOrCreate(PermissionsList::DELETE_PRODUCTS, 'api-user');
-        Permission::findOrCreate(PermissionsList::IMPORT_CSV_PRODUCTS, 'api-user');
-
-        Role::findOrCreate('admin', 'api-user')
-            ->givePermissionTo([
-                PermissionsList::LIST_PRODUCTS,
-                PermissionsList::CREATE_PRODUCTS,
-                PermissionsList::UPDATE_PRODUCTS,
-                PermissionsList::DELETE_PRODUCTS,
-                PermissionsList::IMPORT_CSV_PRODUCTS
-            ]);
-
-        $this->app->make(PermissionRegistrar::class)->registerPermissions();
     }
 
     public function test_the_controller_returns_all_products_successfully()
@@ -67,8 +37,8 @@ class ProductControllerTest extends TestCase
     public function test_the_controller_create_new_product()
     {
         $product = $this->product;
-        $response = $this->actingAs($this->user, 'api-user')->postJson('api/products', [
-            'category_id' => $this->category->id,
+        $response = $this->actingAs($this->user)->postJson('api/products', [
+            'category_id' => $this->product->category_id,
             'name' => $this->product->name,
             'quantity' => $this->product->quantity,
             'price' => $this->product->price,
@@ -80,7 +50,7 @@ class ProductControllerTest extends TestCase
     public function test_the_controller_update_product()
     {
         $product = $this->product;
-        $response = $this->actingAs($this->user, 'api-user')->putJson("api/products/{$product->id}", []);
+        $response = $this->actingAs($this->user)->putJson("api/products/{$product->id}", []);
         $response->assertStatus(200);
         $this->assertModelExists($product);
     }
@@ -96,7 +66,7 @@ class ProductControllerTest extends TestCase
     public function test_the_controller_delete_product()
     {
         $product = $this->product;
-        $response = $this->actingAs($this->user, 'api-user')->deleteJson("api/products/{$product->id}");
+        $response = $this->actingAs($this->user)->deleteJson("api/products/{$product->id}");
         $response->assertStatus(200);
         $this->assertDatabaseMissing('products', [
             'id' => $product->id,
@@ -147,18 +117,4 @@ class ProductControllerTest extends TestCase
         ]);
     }
 
-    public function test_importing_csv_file_of_products_to_database()
-    {
-        Storage::fake('uploads');
-
-        $header = 'category_id,name,quantity,price';
-        $row1 = '1,test 1, 3, 50';
-        $row2 = '1,test 2, 3, 50';
-
-        $content = implode("\n", [$header, $row1, $row2]);
-        $response = $this->actingAs($this->user, 'api-user')->postJson("api/products/import-csv-file", [
-            'file' => UploadedFile::fake()->createWithContent('test.csv',$content)
-        ]);
-        $response->assertStatus(200);
-    }
 }

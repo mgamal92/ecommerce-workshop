@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Http\Resources\ProductsResource;
-use App\Jobs\ProductsImportCsvJob;
 use App\Models\Product;
 use App\Traits\HttpResponses;
 
@@ -58,23 +57,5 @@ class ProductService extends BaseServices
     {
         $qty = $quantity + $this->cartService->getProductquantityInCart($product->id);
         return $qty > 0 && $qty <= $product->quantity;
-    }
-
-    public function importCsvFile($file)
-    {
-        $csv = file($file);
-        $chunks = array_chunk($csv,1000);
-        $header = [];
-
-        foreach ($chunks as $key => $chunk) {
-            $data = array_map('str_getcsv', $chunk);
-
-            if($key == 0){
-                $header = $data[0];
-                unset($data[0]);
-            }
-        }
-
-        ProductsImportCsvJob::dispatch($header, $data);                
     }
 }
