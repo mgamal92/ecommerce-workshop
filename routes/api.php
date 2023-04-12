@@ -10,7 +10,6 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StaffController;
-use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -32,8 +31,8 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('products', ProductController::class)->except('destroy');
     Route::resource('checkout', CheckoutController::class);
     Route::resource('invoices', InvoiceController::class);
-    Route::resource('orders', OrderController::class);
-    Route::resource('customers', CustomerController::class);
+    Route::resource('staff/user', StaffController::class)->except(['destroy', 'create']);
+
 
     //TODO should be for admin-role after 1.x-admin-tasks merge
     Route::controller(ReportController::class)->prefix('reports/')->name('report.')->group(function () {
@@ -59,11 +58,6 @@ Route::middleware(['auth:api-user'])->group(function () {
         Route::resource('categories', CategoryController::class)->only('destroy');
         Route::resource('staff/user', StaffController::class)->only(['destroy', 'create']);
         Route::resource('orders', OrderController::class);
-
-        Route::controller(ReportController::class)->prefix('reports/')->name('report.')->group(function () {
-            Route::get('customers/{from}/{to}', 'customersWithinPeriod')->name('customers');
-            Route::get('members/{from}/{to}', 'membersWithinPeriod')->name('members');
-        });
 
         //shared between customer and user of admin-role
         Route::controller(CustomerController::class)->prefix('admin/customers/')->group(function () {
