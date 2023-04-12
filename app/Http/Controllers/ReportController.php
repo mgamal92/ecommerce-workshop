@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +16,26 @@ use Symfony\Component\HttpFoundation\Response;
 class ReportController extends Controller
 {
     use HttpResponses;
+
     /**
-     * Report for the customers who registered within a specific period.
+     * Report for any model passed who registered within a specific period.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function specificPeriodReport($table, $from, $to)
+    {
+        $models = config('reports.specificPeriodReports');
+
+        if (!array_key_exists($table, $models)) {
+            return new Exception('invalid table name');
+        }
+
+        $report = $models[$table];
+
+        return app()->call($report, ['from' => $from, 'to' => $to]);
+    }
+
     public function customersWithinPeriod($from, $to)
     {
         $startDate = Carbon::createFromFormat('d-m-Y', $from)->startOfDay();
@@ -31,12 +47,6 @@ class ReportController extends Controller
 
         return count($data) > 0 ? $data : $this->error(null, "no record found", 404);
     }
-
-    /**
-     * Report for the members who registered within a specific period.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function membersWithinPeriod($from, $to)
     {
         $startDate = Carbon::createFromFormat('d-m-Y', $from)->startOfDay();

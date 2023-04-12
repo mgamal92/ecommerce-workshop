@@ -30,7 +30,7 @@ class ReportControllerTest extends TestCase
     {
         $date = $this->customer->first()->created_at->format('d-m-Y');
 
-        $response = $this->actingAs($this->user)->getJson(route('report.customers', ['from' => $date, 'to' => $date]));
+        $response = $this->actingAs($this->user)->getJson(route('reports.periods', ['table' => 'customers', 'from' => $date, 'to' => $date]));
 
         $response->assertSuccessful();
     }
@@ -42,7 +42,7 @@ class ReportControllerTest extends TestCase
     {
         $date = $this->user->first()->created_at->format('d-m-Y');
 
-        $response = $this->actingAs($this->user)->getJson(route('report.members', ['from' => $date, 'to' => $date]));
+        $response = $this->actingAs($this->user)->getJson(route('reports.periods', ['table' => 'users', 'from' => $date, 'to' => $date]));
 
         $response->assertSuccessful();
     }
