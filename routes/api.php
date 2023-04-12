@@ -31,7 +31,14 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('products', ProductController::class)->except('destroy');
     Route::resource('checkout', CheckoutController::class);
     Route::resource('invoices', InvoiceController::class);
-    Route::resource('staff/user', StaffController::class)->except(['destroy', 'create']);
+    Route::resource('orders', OrderController::class);
+    Route::resource('customers', CustomerController::class);
+
+    //TODO should be for admin-role after 1.x-admin-tasks merge
+    Route::controller(ReportController::class)->prefix('reports/')->name('report.')->group(function () {
+        Route::get('customers/{from}/{to}', 'customersWithinPeriod')->name('customers');
+        Route::get('members/{from}/{to}', 'membersWithinPeriod')->name('members');
+    });
 
     //user roles
     Route::middleware(['role:super-admin'])->group(function () {
