@@ -35,9 +35,8 @@ Route::middleware(['auth:api-user'])->group(function () {
 
 
     //TODO should be for admin-role after 1.x-admin-tasks merge
-    Route::controller(ReportController::class)->prefix('reports/')->name('report.')->group(function () {
-        Route::get('customers/{from}/{to}', 'customersWithinPeriod')->name('customers');
-        Route::get('members/{from}/{to}', 'membersWithinPeriod')->name('members');
+    Route::controller(ReportController::class)->prefix('reports/')->group(function () {
+        Route::get('{table}/{from}/{to}', 'specificPeriodReport')->name('reports.periods');
     });
 
     //user roles
