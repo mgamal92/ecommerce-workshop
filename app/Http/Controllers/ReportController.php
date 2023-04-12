@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomersResource;
+use App\Http\Resources\OrdersResource;
 use App\Http\Resources\UsersResource;
 use App\Models\Customer;
+use App\Models\Order;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Carbon\Carbon;
@@ -55,6 +57,18 @@ class ReportController extends Controller
         $users = DB::table('users')->whereBetween('created_at', [$startDate, $endDate])->paginate();
 
         $data = (UsersResource::collection($users))->additional(['users_count' => User::count()]);
+
+        return count($data) > 0 ? $data : $this->error(null, "no record found", 404);
+    }
+
+    public function ordersWithinPeriod($from, $to)
+    {
+        $startDate = Carbon::createFromFormat('d-m-Y', $from)->startOfDay();
+        $endDate = Carbon::createFromFormat('d-m-Y', $to)->endOfDay();
+
+        $orders = Order::with('items')->whereBetween('created_at', [$startDate, $endDate])->paginate();
+
+        $data = (OrdersResource::collection($orders))->additional(['orders-count' => Order::count()]);
 
         return count($data) > 0 ? $data : $this->error(null, "no record found", 404);
     }

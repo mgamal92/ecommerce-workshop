@@ -13,5 +13,6 @@ return [
     'specificPeriodReports' => [
         'customers' => ReportController::class . '@customersWithinPeriod',
         'users' => ReportController::class . '@membersWithinPeriod',
+        'orders' => ReportController::class . '@ordersWithinPeriod',
     ],
 ];
