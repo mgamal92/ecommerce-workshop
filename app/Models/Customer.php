@@ -24,7 +24,13 @@ class Customer extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function cart() {
+    public function cart()
+    {
         return $this->hasOne(Cart::class, 'customer_id');
+    }
+
+    public function address()
+    {
+        return $this->hasMany(Address::class, 'customer_id');
     }
 }
