@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
             CustomerSeeder::class,
             CartSeeder::class,
+            CountrySeeder::class,
+            AddressSeeder::class
         ]);
 
         //create super-admin, admin and editor roles
