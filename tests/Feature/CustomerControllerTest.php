@@ -27,7 +27,9 @@ class CustomerControllerTest extends TestCase
     public function test_the_controller_returns_all_customers_successfully()
     {
         $customers = $this->customer;
-        $response = $this->actingAs($this->user)->getJson('api/customers');
+        $role = Role::create(['name' => 'admin']);
+        $this->user->assignRole($role->name);
+        $response = $this->actingAs($this->user)->getJson(route('customers.index'));
         $response->assertStatus(200);
         $this->assertModelExists($customers);
     }

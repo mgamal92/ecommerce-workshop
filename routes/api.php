@@ -31,7 +31,7 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('checkout', CheckoutController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('staff/user', StaffController::class)->except(['destroy', 'create']);
-    Route::resource('customers', CustomerController::class)->except('destroy');
+
 
     //user roles
     Route::middleware(['role:super-admin'])->group(function () {
@@ -49,9 +49,16 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('products', ProductController::class)->only('destroy');
         Route::resource('categories', CategoryController::class)->only('destroy');
-        Route::resource('customers', CustomerController::class)->only('destroy');
         Route::resource('staff/user', StaffController::class)->only(['destroy', 'create']);
         Route::resource('orders', OrderController::class);
+
+        //shared between customer and user of admin-role
+        Route::controller(CustomerController::class)->prefix('admin/customers/')->group(function () {
+            Route::get('list-all', 'index')->name('customers.index');
+            Route::get('show/{customer}', 'show');
+            Route::put('update/{customer}', 'update');
+            Route::delete('delete/{customer}', 'destroy');
+        });
     });
 
 
@@ -79,6 +86,7 @@ Route::middleware(['auth:customer,api-customer'])->group(function () {
     Route::post('carts/update-cart/{product_id}', [CartController::class, 'updateCart']);
     Route::post('carts/remove-from-cart/{product_id}', [CartController::class, 'removeFromCart']);
     Route::post('carts/clear', [CartController::class, 'clear']);
+    Route::resource('customers', CustomerController::class)->except('index');
 });
 
 
