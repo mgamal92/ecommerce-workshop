@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -25,6 +26,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+
+Route::resource('customer/address', AddressController::class);
 Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('categories', CategoryController::class)->except('destroy');
     Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
