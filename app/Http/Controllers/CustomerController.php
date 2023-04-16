@@ -39,12 +39,9 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($request, $customer)
     {
-        //NOTE no validations applied
-        $customer = $this->customerService->store($this->model, $request->toArray());
-
-        return new CustomersResource($customer);
+        return $this->customerService->store($customer, $request->toArray());
     }
 
     /**

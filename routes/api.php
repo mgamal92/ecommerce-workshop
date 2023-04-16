@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
@@ -24,10 +25,12 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+//edited ons strategy branch
+Route::resource('customers', CustomerController::class);
 
+//return countries
+Route::get('countries', [CountryController::class, 'index'])->name('country.index');
 
-
-Route::resource('customer/address', AddressController::class);
 Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('categories', CategoryController::class)->except('destroy');
     Route::get('categories/{id}/products', [CategoryController::class, 'showWithProducts']);
