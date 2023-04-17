@@ -20,7 +20,7 @@ class AddressesResource extends JsonResource
                 'address' => $this->address,
                 'building_no' => (string) $this->building_no,
                 'country' => $this->country,
-                'country_id' => $this->country_id,
+                'country_code' => $this->country_code,
                 'city' => $this->city
             ]
         ];

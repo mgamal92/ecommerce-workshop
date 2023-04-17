@@ -56,4 +56,19 @@ class CustomerControllerTest extends TestCase
             'id' => $customer->id,
         ]);
     }
+
+    public function test_the_controller_add_new_address()
+    {
+        $customer = $this->customer;
+        $response = $this->actingAs($customer, 'api-customer')->postJson(route('customer.new.address'), [
+            'address' => 'testing',
+            'building_no' => '20',
+            'country' => 'TEST',
+            'country_code' => 'test',
+            'city' => 'test'
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertModelExists($customer);
+    }
 }
