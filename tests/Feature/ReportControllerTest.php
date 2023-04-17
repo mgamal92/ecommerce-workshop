@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class ReportControllerTest extends TestCase
@@ -15,6 +16,7 @@ class ReportControllerTest extends TestCase
     private User $user;
     private Customer $customer;
     private Order $order;
+    private Role $role;
 
     //setup to run before each test method
     protected function setUp(): void
@@ -24,6 +26,8 @@ class ReportControllerTest extends TestCase
         $this->user = User::factory()->create();
         $this->customer = Customer::factory()->create();
         $this->order = Order::factory()->create();
+        $this->role = Role::create(['name' => 'admin']);
+        $this->user->assignRole($this->role->name);
     }
 
     /* 
