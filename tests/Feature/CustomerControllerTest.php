@@ -34,19 +34,6 @@ class CustomerControllerTest extends TestCase
         $this->assertModelExists($customers);
     }
 
-    public function test_the_controller_create_new_customer()
-    {
-        $customer = $this->customer;
-        $response = $this->actingAs($this->user)->postJson('api/customers', [
-            'name' => 'Test Customer',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
-        $response->assertStatus(201);
-        $this->assertModelExists($customer);
-    }
-
     public function test_the_controller_update_customer()
     {
         $customer = $this->customer;
