@@ -83,4 +83,17 @@ class CustomerController extends Controller
             return $this->success(null, "Customer Deleted Successfully", 200);
         }
     }
+
+    /**
+     * Customer can create new address.
+     *
+     * @return CustomersResource
+     */
+    public function newAddress(Request $request)
+    {
+        if (count(auth()->user()->address) == 7) {
+            return $this->error(null, "Maximum limit of seven addresses exceeded. Please remove any unnecessary addresses before adding a new one", 405);
+        }
+        return new CustomersResource($this->customerService->addAddress($request));
+    }
 }
