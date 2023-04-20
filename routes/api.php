@@ -91,9 +91,12 @@ Route::middleware(['auth:customer,api-customer'])->group(function () {
     Route::post('carts/update-cart/{product_id}', [CartController::class, 'updateCart']);
     Route::post('carts/remove-from-cart/{product_id}', [CartController::class, 'removeFromCart']);
     Route::post('carts/clear', [CartController::class, 'clear']);
-    Route::resource('customers', CustomerController::class);
-    Route::post('customers/new-address', [CustomerController::class, 'newAddress'])->name('customer.new.address');
-    Route::resource('customers', CustomerController::class)->except('index');
+    Route::controller(CustomerController::class)->prefix('customers/')->name('customer.')->group(function () {
+        Route::post('new-address', 'newAddress')->name('new.address');
+        Route::put('{customer}/update-address/{address}', 'update')->name('update');
+        Route::post('{customer}/delete-address/{address}', 'removeAddress');
+    });
+    Route::resource('customers', CustomerController::class)->except(['index', 'update']);
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 });
 

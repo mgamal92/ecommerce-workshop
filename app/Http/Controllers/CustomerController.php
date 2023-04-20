@@ -51,11 +51,19 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Customer $customer, $address)
     {
-        $updateCustomer = $this->customerService->update($this->model, $customer->id, $request->toArray());
-
-        return new CustomersResource($updateCustomer);
+        $validated = $request->validate([
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', "unique:customers,email,$customer->id"],
+            'address' => ['nullable', 'string'],
+            'building_no' => ['nullable', 'integer'],
+            'country' => ['nullable', 'string'],
+            'country_code' => ['nullable', 'string'],
+            'city' => ['nullable', 'string']
+        ]);
+        $validated['address_id'] = $address;
+        return new CustomersResource($this->customerService->update($this->model, $customer->id, $validated));
     }
 
     /**

@@ -37,4 +37,24 @@ class CustomerService extends BaseServices
             return $customer;
         }
     }
+
+    public function update($model, int $id, array $data)
+    {
+        $customer = Customer::findOrFail($id);
+        $customer->update([
+            'name' => $data['name'],
+            'email' => $data['email']
+        ]);
+        //update address
+        Address::whereId($data['address_id'])->whereCustomerId($id)->update([
+            'address' => $data['address'],
+            'building_no' => $data['building_no'],
+            'city' => $data['city'],
+            'country' => $data['country'],
+            'country_code' => $data['country_code']
+        ]);
+        if ($customer) {
+            return $customer;
+        }
+    }
 }

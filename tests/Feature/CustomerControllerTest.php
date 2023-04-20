@@ -37,7 +37,16 @@ class CustomerControllerTest extends TestCase
     public function test_the_controller_update_customer()
     {
         $customer = $this->customer;
-        $response = $this->actingAs($this->user)->putJson("api/customers/{$customer->id}", []);
+        $response = $this->actingAs($this->user)->putJson(route('customer.update', ['customer' => $customer->id, 'address' => 1]), [
+            'name' => 'test',
+            'address' => 'testing address',
+            'email' => 'a@a.com',
+            'address' => '',
+            'building_no' => '',
+            'country' => '',
+            'city' => '',
+            'country_code' => ''
+        ]);
         $response->assertStatus(200);
         $this->assertModelExists($customer);
     }
