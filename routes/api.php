@@ -9,6 +9,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StaffController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +33,6 @@ Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('checkout', CheckoutController::class);
     Route::resource('invoices', InvoiceController::class);
     Route::resource('staff/user', StaffController::class)->except(['destroy', 'create']);
-
 
     //user roles
     Route::middleware(['role:super-admin'])->group(function () {
@@ -59,6 +59,10 @@ Route::middleware(['auth:api-user'])->group(function () {
             Route::get('show/{customer}', 'show');
             Route::put('update/{customer}', 'update');
             Route::delete('delete/{customer}', 'destroy');
+        });
+
+        Route::controller(ReportController::class)->prefix('reports/')->group(function () {
+            Route::get('{table}/{from}/{to}', 'specificPeriodReport')->name('reports.periods');
         });
     });
 

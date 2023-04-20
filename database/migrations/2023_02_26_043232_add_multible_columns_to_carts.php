@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('carts', function (Blueprint $table) {
-            $table->smallInteger('offer_sent');
+            $table->smallInteger('offer_sent')->nullable();
         });
     }
 
