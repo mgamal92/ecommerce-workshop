@@ -94,7 +94,7 @@ Route::middleware(['auth:customer,api-customer'])->group(function () {
     Route::controller(CustomerController::class)->prefix('customers/')->name('customer.')->group(function () {
         Route::post('new-address', 'newAddress')->name('new.address');
         Route::put('{customer}/update-address/{address}', 'update')->name('update');
-        Route::post('{customer}/delete-address/{address}', 'removeAddress');
+        Route::post('{customer}/delete-address/{address}', 'removeAddress')->name('delete.address');
     });
     Route::resource('customers', CustomerController::class)->except(['index', 'update']);
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');

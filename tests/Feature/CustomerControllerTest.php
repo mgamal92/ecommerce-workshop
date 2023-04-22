@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -84,5 +85,13 @@ class CustomerControllerTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertModelExists($customer);
+    }
+
+    public function test_the_controller_customer_can_delete_one_address()
+    {
+        $customer = $this->customer;
+        Address::factory(3)->create(['customer_id' => $customer->id]);
+        $response = $this->actingAs($customer, 'api-customer')->postJson(route('customer.delete.address', ['customer' => $customer, 'address' => 3]));
+        $response->assertSuccessful();
     }
 }

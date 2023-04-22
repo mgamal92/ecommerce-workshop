@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomersResource;
+use App\Models\Address;
 use App\Models\Customer;
 use App\Services\CustomerService;
 use App\Traits\HttpResponses;
@@ -103,5 +104,13 @@ class CustomerController extends Controller
             return $this->error(null, "Maximum limit of seven addresses exceeded. Please remove any unnecessary addresses before adding a new one", 405);
         }
         return new CustomersResource($this->customerService->addAddress($request));
+    }
+
+    public function removeAddress(Customer $customer, $address)
+    {
+        if (count($customer->address) <= 1) {
+            return $this->error(null, 'You must have at least one address saved.', 405);
+        }
+        return $this->customerService->deleteAddress($customer, $address);
     }
 }

@@ -4,11 +4,13 @@ namespace App\Services;
 
 use App\Models\Address;
 use App\Models\Customer;
+use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CustomerService extends BaseServices
 {
+    use HttpResponses;
     public function store($model, array $data)
     {
         $address = new Address();
@@ -55,6 +57,17 @@ class CustomerService extends BaseServices
         ]);
         if ($customer) {
             return $customer;
+        }
+    }
+
+    public function deleteAddress($model, $address)
+    {
+        $customerAddress = Address::whereId($address)->whereCustomerId($model->id)->firstOrFail();
+
+        $customerAddress->delete();
+
+        if ($customerAddress) {
+            return $this->success(null, 'address deleted successfully', 201);
         }
     }
 }
