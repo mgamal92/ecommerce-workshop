@@ -20,7 +20,8 @@ class CustomerRegistrationTest extends TestCase
             'building_no' => '20',
             'country' => 'TEST',
             'country_code' => 'test',
-            'city' => 'test'
+            'city' => 'test',
+            'avatar' => ''
         ]);
 
         $response->assertStatus(201);

@@ -21,6 +21,10 @@ class CustomerService extends BaseServices
         $address->country_code = $data['country_code'];
         $address->city = $data['city'];
         $address->save();
+
+        if (isset($data['avatar'])) {
+            $model->addMedia($data['avatar'])->withResponsiveImages()->toMediaCollection('customersAvatar');
+        }
     }
 
     public function addAddress(Request $request)
@@ -55,6 +59,11 @@ class CustomerService extends BaseServices
             'country' => $data['country'],
             'country_code' => $data['country_code']
         ]);
+
+        if (isset($data['avatar'])) {
+            $model->addMedia($data['avatar'])->withResponsiveImages()->toMediaCollection('customersAvatar');
+        }
+
         if ($customer) {
             return $customer;
         }

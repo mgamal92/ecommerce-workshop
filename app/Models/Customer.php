@@ -2,16 +2,21 @@
 
 namespace App\Models;
 
+use App\Traits\InteractsWithHashedMedia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Customer extends Authenticatable
+class Customer extends Authenticatable implements HasMedia
 {
     use HasApiTokens;
     use HasFactory;
     use Notifiable;
+    use InteractsWithHashedMedia;
 
     protected $fillable = ['name', 'email', 'password'];
 
@@ -32,5 +37,22 @@ class Customer extends Authenticatable
     public function address()
     {
         return $this->hasMany(Address::class, 'customer_id');
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('customersAvatar')
+            ->singleFile()
+            ->registerMediaConversions(function (Media $media) {
+                $this
+                    ->addMediaConversion('thumb')
+                    ->width(200)
+                    ->height(200);
+            });
+    }
+
+    public function order()
+    {
+        return $this->hasMany(Order::class, 'customer_id');
     }
 }

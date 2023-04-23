@@ -23,7 +23,8 @@ class CustomersResource extends JsonResource
                 'updated_at' => $this->updated_at,
             ],
             'relationships' => [
-                'addresses' => AddressesResource::collection($this->address)
+                'addresses' => AddressesResource::collection($this->address),
+                'avatar' => $this->getFirstMediaUrl('customersAvatar'),
             ]
         ];
     }

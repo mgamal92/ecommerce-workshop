@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,6 +14,7 @@ class OrderControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $user;
+    private Customer $customer;
     private Order $order;
 
     //setup to run before each test method
@@ -20,16 +22,17 @@ class OrderControllerTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin']);
+        $role = Role::create(['name' => 'admin']);
         $this->user = User::factory()->create();
-        $this->user->assignRole('admin');
+        $this->user->assignRole($role->name);
+        $this->customer = Customer::factory()->create();
         $this->order = Order::factory()->create();
     }
 
     public function test_the_controller_returns_all_orders_successfully()
     {
         $orders = $this->order;
-        $response = $this->actingAs($this->user,)->getJson('api/orders');
+        $response = $this->actingAs($this->user)->getJson('api/orders');
         $response->assertStatus(200);
         $this->assertModelExists($orders);
     }

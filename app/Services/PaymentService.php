@@ -56,7 +56,7 @@ class PaymentService
         // save order DB
         $order = Order::create([
             'order_id' => $response['id'],
-            'user_id' => Auth::user()->id,
+            'customer_id' => Auth::user()->id,
             'email' => $response['shipping_data']['email'],
             'fname' => $response['shipping_data']['first_name'],
             'lname' => $response['shipping_data']['last_name'],

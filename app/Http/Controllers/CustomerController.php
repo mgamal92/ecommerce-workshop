@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\CustomersResource;
+use App\Http\Resources\OrdersResource;
 use App\Models\Address;
 use App\Models\Customer;
 use App\Services\CustomerService;
@@ -61,7 +62,8 @@ class CustomerController extends Controller
             'building_no' => ['nullable', 'integer'],
             'country' => ['nullable', 'string'],
             'country_code' => ['nullable', 'string'],
-            'city' => ['nullable', 'string']
+            'city' => ['nullable', 'string'],
+            'avatar' => ['nullable', 'image', 'max:1000']
         ]);
         $validated['address_id'] = $address;
         return new CustomersResource($this->customerService->update($this->model, $customer->id, $validated));
@@ -112,5 +114,11 @@ class CustomerController extends Controller
             return $this->error(null, 'You must have at least one address saved.', 405);
         }
         return $this->customerService->deleteAddress($customer, $address);
+    }
+
+    public function profile()
+    {
+        $orders = OrdersResource::collection(auth()->user()->order);
+        return (new CustomersResource(auth()->user()))->additional(['total_orders' => $orders]);
     }
 }

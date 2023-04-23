@@ -52,6 +52,10 @@ class StaffController extends Controller
     {
         $update = $this->service->update($this->model, $user->id, $request->toArray());
 
+        if (isset($request->avatar)) {
+            $user->addMedia($request->avatar)->withResponsiveImages()->toMediaCollection('userAvatar');
+        }
+
         return new UsersResource($update);
     }
 

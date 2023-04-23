@@ -46,7 +46,8 @@ class CustomerControllerTest extends TestCase
             'building_no' => '',
             'country' => '',
             'city' => '',
-            'country_code' => ''
+            'country_code' => '',
+            'avatar' => ''
         ]);
         $response->assertStatus(200);
         $this->assertModelExists($customer);
@@ -93,5 +94,13 @@ class CustomerControllerTest extends TestCase
         Address::factory(3)->create(['customer_id' => $customer->id]);
         $response = $this->actingAs($customer, 'api-customer')->postJson(route('customer.delete.address', ['customer' => $customer, 'address' => 3]));
         $response->assertSuccessful();
+    }
+
+    public function test_display_customer_profile()
+    {
+        $customer = $this->customer;
+        $response = $this->actingAs($customer)->getJson(route('customer.profile'));
+        $response->assertStatus(200);
+        $this->assertModelExists($customer);
     }
 }

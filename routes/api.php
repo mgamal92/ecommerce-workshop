@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
@@ -65,24 +64,11 @@ Route::middleware(['auth:api-user'])->group(function () {
             Route::delete('delete/{customer}', 'destroy');
         });
     });
-
-
-    Route::controller(PaymentController::class)->prefix('payment/paymob/')->group(function () {
-
-        // payment transaction callback
-        Route::post('processing', 'processed');
-
-        Route::prefix('callback/')->group(function () {
-
-            //handle transaction callback
-            Route::post('transaction', 'transaction');
-            //handle response callback 
-            Route::get('response', 'response');
-        });
-    });
 });
 
 Route::middleware(['auth:customer,api-customer'])->group(function () {
+
+    Route::get('profile', [CustomerController::class, 'profile'])->name('customer.profile');
     //search in products
     Route::get('products/search/{query}', [ProductController::class, 'search']);
 
@@ -98,6 +84,20 @@ Route::middleware(['auth:customer,api-customer'])->group(function () {
     });
     Route::resource('customers', CustomerController::class)->except(['index', 'update']);
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
+
+    Route::controller(PaymentController::class)->prefix('payment/paymob/')->group(function () {
+
+        // payment transaction callback
+        Route::post('processing', 'processed');
+
+        Route::prefix('callback/')->group(function () {
+
+            //handle transaction callback
+            Route::post('transaction', 'transaction');
+            //handle response callback 
+            Route::get('response', 'response');
+        });
+    });
 });
 
 

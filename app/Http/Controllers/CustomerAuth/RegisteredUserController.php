@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        //save address
+        //save address and avatar
         $this->controller->store($request, $customer);
 
         return (new CustomersResource($customer))->additional([

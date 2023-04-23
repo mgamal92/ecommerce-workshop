@@ -33,7 +33,8 @@ class RegisterRequest extends FormRequest
             'building_no' => ['required', 'integer'],
             'country' => ['required', 'string'],
             'country_code' => ['nullable', 'string'],
-            'city' => ['required', 'string']
+            'city' => ['required', 'string'],
+            'avatar' => ['nullable', 'image', 'max:1000']
         ];
     }
 

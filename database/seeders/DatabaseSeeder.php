@@ -19,11 +19,11 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CategorySeeder::class,
             ProductSeeder::class,
-            OrderSeeder::class,
             CustomerSeeder::class,
             CartSeeder::class,
             CountrySeeder::class,
-            AddressSeeder::class
+            AddressSeeder::class,
+            OrderSeeder::class,
         ]);
 
         //create super-admin, admin and editor roles
