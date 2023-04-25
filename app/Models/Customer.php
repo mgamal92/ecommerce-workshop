@@ -55,4 +55,9 @@ class Customer extends Authenticatable implements HasMedia
     {
         return $this->hasMany(Order::class, 'customer_id');
     }
+
+    public function category()
+    {
+        return  $this->belongsToMany(Category::class, 'customer_category', 'customer_id', 'category_id');
+    }
 }

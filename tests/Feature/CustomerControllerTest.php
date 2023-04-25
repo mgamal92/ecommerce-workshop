@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Address;
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -102,5 +103,21 @@ class CustomerControllerTest extends TestCase
         $response = $this->actingAs($customer)->getJson(route('customer.profile'));
         $response->assertStatus(200);
         $this->assertModelExists($customer);
+    }
+
+    public function test_attach_preferred_category_to_customer_account()
+    {
+        $customer = $this->customer;
+        Category::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.category', ['category' => 1, 'pivot' => 'attach']));
+        $response->assertSuccessful();
+    }
+
+    public function test_detach_preferred_category_from_customer_account()
+    {
+        $customer = $this->customer;
+        Category::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.category', ['category' => 1, 'pivot' => 'detach']));
+        $response->assertSuccessful();
     }
 }

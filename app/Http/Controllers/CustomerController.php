@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoriesResource;
 use App\Http\Resources\CustomersResource;
 use App\Http\Resources\OrdersResource;
-use App\Models\Address;
 use App\Models\Customer;
 use App\Services\CustomerService;
 use App\Traits\HttpResponses;
@@ -17,11 +17,18 @@ class CustomerController extends Controller
     protected CustomerService $customerService;
 
     protected $model;
+    protected $auth;
 
     public function __construct(CustomerService $customerService)
     {
         $this->customerService = $customerService;
         $this->model = new Customer();
+
+        $this->middleware(function ($request, $next) {
+            $this->auth = auth()->user();
+
+            return $next($request);
+        });
     }
 
     /**
@@ -118,7 +125,20 @@ class CustomerController extends Controller
 
     public function profile()
     {
-        $orders = OrdersResource::collection(auth()->user()->order);
-        return (new CustomersResource(auth()->user()))->additional(['total_orders' => $orders]);
+        $orders = OrdersResource::collection($this->auth->order);
+        return (new CustomersResource($this->auth))->additional(['total_orders' => $orders]);
+    }
+
+    public function preferredCategory($category, $pivot)
+    {
+        $this->customerService->customerPreferredCategory($category, $pivot);
+
+        return (new CustomersResource($this->auth))->additional([
+            'data' => [
+                'relationships' => [
+                    'category' => CategoriesResource::collection($this->auth->category)
+                ]
+            ]
+        ]);
     }
 }

@@ -68,7 +68,7 @@ Route::middleware(['auth:api-user'])->group(function () {
 
 Route::middleware(['auth:customer,api-customer'])->group(function () {
 
-    Route::get('profile', [CustomerController::class, 'profile'])->name('customer.profile');
+
     //search in products
     Route::get('products/search/{query}', [ProductController::class, 'search']);
 
@@ -81,6 +81,10 @@ Route::middleware(['auth:customer,api-customer'])->group(function () {
         Route::post('new-address', 'newAddress')->name('new.address');
         Route::put('{customer}/update-address/{address}', 'update')->name('update');
         Route::post('{customer}/delete-address/{address}', 'removeAddress')->name('delete.address');
+        Route::get('profile', 'profile')->name('profile');
+        Route::prefix('account/settings/')->group(function () {
+            Route::post('preferred-category/{category}/{pivot}', 'preferredCategory')->name('preferred.category');
+        });
     });
     Route::resource('customers', CustomerController::class)->except(['index', 'update']);
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');

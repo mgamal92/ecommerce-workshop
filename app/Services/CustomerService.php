@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Address;
 use App\Models\Customer;
 use App\Traits\HttpResponses;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -78,5 +79,28 @@ class CustomerService extends BaseServices
         if ($customerAddress) {
             return $this->success(null, 'address deleted successfully', 201);
         }
+    }
+
+    public function customerPreferredCategory($category, $pivot)
+    {
+        $actions = config('accountSettings.category');
+
+        if (!array_key_exists($pivot, $actions)) {
+            return new Exception('no such action exists', 404);
+        }
+
+        $passAction = $actions[$pivot];
+
+        return app()->call($passAction, ['category' => $category]);
+    }
+
+    public function attachCategory($category)
+    {
+        auth()->user()->category()->syncWithoutDetaching($category);
+    }
+
+    public function detachCategory($category)
+    {
+        auth()->user()->category()->detach($category);
     }
 }
