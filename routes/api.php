@@ -7,6 +7,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -27,6 +28,9 @@ use Illuminate\Support\Facades\Route;
 
 //return countries
 Route::get('countries', [CountryController::class, 'index'])->name('country.index');
+
+//display all langs
+Route::get('langs', [LanguageController::class, 'index']);
 
 Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('categories', CategoryController::class)->except('destroy');
@@ -55,7 +59,7 @@ Route::middleware(['auth:api-user'])->group(function () {
         Route::resource('categories', CategoryController::class)->only('destroy');
         Route::resource('staff/user', StaffController::class)->only(['destroy', 'create']);
         Route::resource('orders', OrderController::class);
-
+        Route::resource('languages', LanguageController::class);
         //shared between customer and user of admin-role
         Route::controller(CustomerController::class)->prefix('admin/customers/')->group(function () {
             Route::get('list-all', 'index')->name('customers.index');
@@ -67,8 +71,6 @@ Route::middleware(['auth:api-user'])->group(function () {
 });
 
 Route::middleware(['auth:customer,api-customer'])->group(function () {
-
-
     //search in products
     Route::get('products/search/{query}', [ProductController::class, 'search']);
 
@@ -84,6 +86,8 @@ Route::middleware(['auth:customer,api-customer'])->group(function () {
         Route::get('profile', 'profile')->name('profile');
         Route::prefix('account/settings/')->group(function () {
             Route::post('preferred-category/{category}/{pivot}', 'preferredCategory')->name('preferred.category');
+            //set preferred lang
+            Route::post('preferred-lang/{language}/{action}', 'preferredLang')->name('preferred.lang');
         });
     });
     Route::resource('customers', CustomerController::class)->except(['index', 'update']);

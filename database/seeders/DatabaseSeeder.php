@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             CountrySeeder::class,
             AddressSeeder::class,
             OrderSeeder::class,
+            LanguageSeeder::class
         ]);
 
         //create super-admin, admin and editor roles

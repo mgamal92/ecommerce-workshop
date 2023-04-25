@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Address;
 use App\Models\Customer;
+use App\Models\Language;
 use App\Traits\HttpResponses;
 use Exception;
 use Illuminate\Http\Request;
@@ -81,26 +82,36 @@ class CustomerService extends BaseServices
         }
     }
 
-    public function customerPreferredCategory($category, $pivot)
+    public function customerPreferences($model, $action)
     {
-        $actions = config('accountSettings.category');
+        $actions = config('accountSettings.preferences');
 
-        if (!array_key_exists($pivot, $actions)) {
+        if (!array_key_exists($action, $actions)) {
             return new Exception('no such action exists', 404);
         }
 
-        $passAction = $actions[$pivot];
+        $callAction = $actions[$action];
 
-        return app()->call($passAction, ['category' => $category]);
+        return app()->call($callAction, ['model' => $model]);
     }
 
-    public function attachCategory($category)
+    public function attachCategory($model)
     {
-        auth()->user()->category()->syncWithoutDetaching($category);
+        auth()->user()->category()->syncWithoutDetaching($model);
     }
 
-    public function detachCategory($category)
+    public function detachCategory($model)
     {
-        auth()->user()->category()->detach($category);
+        auth()->user()->category()->detach($model);
+    }
+
+    public function setLang($model)
+    {
+        auth()->user()->lang()->associate($model)->save();
+    }
+
+    public function unsetLang($model)
+    {
+        auth()->user()->lang()->dissociate($model)->save();
     }
 }

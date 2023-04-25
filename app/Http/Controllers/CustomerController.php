@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\CategoriesResource;
 use App\Http\Resources\CustomersResource;
+use App\Http\Resources\LanguagesResource;
 use App\Http\Resources\OrdersResource;
 use App\Models\Customer;
 use App\Services\CustomerService;
@@ -131,12 +132,25 @@ class CustomerController extends Controller
 
     public function preferredCategory($category, $pivot)
     {
-        $this->customerService->customerPreferredCategory($category, $pivot);
+        $this->customerService->customerPreferences($category, $pivot);
 
         return (new CustomersResource($this->auth))->additional([
             'data' => [
                 'relationships' => [
                     'category' => CategoriesResource::collection($this->auth->category)
+                ]
+            ]
+        ]);
+    }
+
+    public function preferredLang($language, $action)
+    {
+        $this->customerService->customerPreferences($language, $action);
+
+        return (new CustomersResource($this->auth))->additional([
+            'data' => [
+                'relationships' => [
+                    'language' => $this->auth->lang
                 ]
             ]
         ]);

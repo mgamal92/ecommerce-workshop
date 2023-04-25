@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Address;
 use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Language;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
@@ -118,6 +119,22 @@ class CustomerControllerTest extends TestCase
         $customer = $this->customer;
         Category::factory()->create();
         $response = $this->actingAs($customer)->postJson(route('customer.preferred.category', ['category' => 1, 'pivot' => 'detach']));
+        $response->assertSuccessful();
+    }
+
+    public function test_customer_set_preferred_language()
+    {
+        $customer = $this->customer;
+        Language::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.lang', ['language' => 1, 'action' => 'set']));
+        $response->assertSuccessful();
+    }
+
+    public function test_customer_unset_preferred_language()
+    {
+        $customer = $this->customer;
+        Language::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.lang', ['language' => 1, 'action' => 'unset']));
         $response->assertSuccessful();
     }
 }
