@@ -13,8 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->smallInteger('offer_sent')->nullable();
+        Schema::create('languages', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->nullable();
+            $table->string('lang');
+            $table->timestamps();
         });
     }
 
@@ -25,8 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('carts', function (Blueprint $table) {
-            $table->dropColumn(['offer_sent']);
-        });
+        Schema::dropIfExists('languages');
     }
 };

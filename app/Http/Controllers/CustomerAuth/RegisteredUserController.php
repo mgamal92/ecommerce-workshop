@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\CustomerAuth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\CustomerController;
 use App\Http\Requests\CustomerAuth\RegisterRequest;
 use App\Http\Resources\CustomersResource;
 use App\Models\Customer;
@@ -14,6 +15,10 @@ use Illuminate\Validation\Rules\Password;
 class RegisteredUserController extends Controller
 {
     use HttpResponses;
+
+    public function __construct(protected CustomerController $controller)
+    {
+    }
     /**
      * Handle an incoming registration request.
      *
@@ -29,6 +34,9 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        //save address and avatar
+        $this->controller->store($request, $customer);
 
         return (new CustomersResource($customer))->additional([
             'token' => $customer->createToken('customerToken')->plainTextToken,

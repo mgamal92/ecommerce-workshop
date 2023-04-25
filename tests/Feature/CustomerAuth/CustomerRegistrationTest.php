@@ -16,6 +16,12 @@ class CustomerRegistrationTest extends TestCase
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
+            'address' => 'testing',
+            'building_no' => '20',
+            'country' => 'TEST',
+            'country_code' => 'test',
+            'city' => 'test',
+            'avatar' => ''
         ]);
 
         $response->assertStatus(201);

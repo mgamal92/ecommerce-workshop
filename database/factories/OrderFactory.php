@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -31,6 +32,7 @@ class OrderFactory extends Factory
             "shipping_fees" => fake()->randomNumber(2),
             "total_amount" => fake()->randomNumber(2),
             "order_id" => fake()->randomNumber(6),
+            'customer_id' => Customer::select('id')->inRandomOrder()->first()->id
         ];
     }
 }

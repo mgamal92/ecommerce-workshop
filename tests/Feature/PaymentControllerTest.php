@@ -2,8 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Order;
-use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -11,14 +10,14 @@ class PaymentControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private User $user;
+    private Customer $customer;
 
     //setup to run before each test method
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->customer = Customer::factory()->create();
     }
 
 
@@ -46,7 +45,7 @@ class PaymentControllerTest extends TestCase
                 "state" => "Utah"
             ]
         ];
-        $response = $this->actingAs($this->user)->postJson('api/payment/paymob/processing', $json);
+        $response = $this->actingAs($this->customer)->postJson('api/payment/paymob/processing', $json);
 
         $response->assertStatus(200);
     }

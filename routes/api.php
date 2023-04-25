@@ -4,8 +4,10 @@ use App\Http\Controllers\AdminRolesController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -24,6 +26,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//return countries
+Route::get('countries', [CountryController::class, 'index'])->name('country.index');
+
+//display all langs
+Route::get('langs', [LanguageController::class, 'index']);
 
 Route::middleware(['auth:api-user'])->group(function () {
     Route::resource('categories', CategoryController::class)->except('destroy');
@@ -52,7 +59,7 @@ Route::middleware(['auth:api-user'])->group(function () {
         Route::resource('categories', CategoryController::class)->only('destroy');
         Route::resource('staff/user', StaffController::class)->only(['destroy', 'create']);
         Route::resource('orders', OrderController::class);
-
+        Route::resource('languages', LanguageController::class);
         //shared between customer and user of admin-role
         Route::controller(CustomerController::class)->prefix('admin/customers/')->group(function () {
             Route::get('list-all', 'index')->name('customers.index');
@@ -61,7 +68,30 @@ Route::middleware(['auth:api-user'])->group(function () {
             Route::delete('delete/{customer}', 'destroy');
         });
     });
+});
 
+Route::middleware(['auth:customer,api-customer'])->group(function () {
+    //search in products
+    Route::get('products/search/{query}', [ProductController::class, 'search']);
+
+    Route::resource('carts', CartController::class);
+    Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart'])->name('add.cart');
+    Route::post('carts/update-cart/{product_id}', [CartController::class, 'updateCart']);
+    Route::post('carts/remove-from-cart/{product_id}', [CartController::class, 'removeFromCart']);
+    Route::post('carts/clear', [CartController::class, 'clear']);
+    Route::controller(CustomerController::class)->prefix('customers/')->name('customer.')->group(function () {
+        Route::post('new-address', 'newAddress')->name('new.address');
+        Route::put('{customer}/update-address/{address}', 'update')->name('update');
+        Route::post('{customer}/delete-address/{address}', 'removeAddress')->name('delete.address');
+        Route::get('profile', 'profile')->name('profile');
+        Route::prefix('account/settings/')->group(function () {
+            Route::post('preferred-category/{category}/{pivot}', 'preferredCategory')->name('preferred.category');
+            //set preferred lang
+            Route::post('preferred-lang/{language}/{action}', 'preferredLang')->name('preferred.lang');
+        });
+    });
+    Route::resource('customers', CustomerController::class)->except(['index', 'update']);
+    Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 
     Route::controller(PaymentController::class)->prefix('payment/paymob/')->group(function () {
 
@@ -76,19 +106,6 @@ Route::middleware(['auth:api-user'])->group(function () {
             Route::get('response', 'response');
         });
     });
-});
-
-Route::middleware(['auth:customer,api-customer'])->group(function () {
-    //search in products
-    Route::get('products/search/{query}', [ProductController::class, 'search']);
-
-    Route::resource('carts', CartController::class);
-    Route::post('carts/add-to-cart/{product_id}', [CartController::class, 'addToCart'])->name('add.cart');
-    Route::post('carts/update-cart/{product_id}', [CartController::class, 'updateCart']);
-    Route::post('carts/remove-from-cart/{product_id}', [CartController::class, 'removeFromCart']);
-    Route::post('carts/clear', [CartController::class, 'clear']);
-    Route::resource('customers', CustomerController::class)->except('index');
-    Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout');
 });
 
 

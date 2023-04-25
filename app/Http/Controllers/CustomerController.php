@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\CategoriesResource;
 use App\Http\Resources\CustomersResource;
+use App\Http\Resources\LanguagesResource;
+use App\Http\Resources\OrdersResource;
 use App\Models\Customer;
 use App\Services\CustomerService;
 use App\Traits\HttpResponses;
@@ -15,11 +18,18 @@ class CustomerController extends Controller
     protected CustomerService $customerService;
 
     protected $model;
+    protected $auth;
 
     public function __construct(CustomerService $customerService)
     {
         $this->customerService = $customerService;
         $this->model = new Customer();
+
+        $this->middleware(function ($request, $next) {
+            $this->auth = auth()->user();
+
+            return $next($request);
+        });
     }
 
     /**
@@ -39,12 +49,9 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($request, $customer)
     {
-        //NOTE no validations applied
-        $customer = $this->customerService->store($this->model, $request->toArray());
-
-        return new CustomersResource($customer);
+        return $this->customerService->store($customer, $request->toArray());
     }
 
     /**
@@ -54,11 +61,20 @@ class CustomerController extends Controller
      * @param  \App\Models\Customer $customer
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Customer $customer)
+    public function update(Request $request, Customer $customer, $address)
     {
-        $updateCustomer = $this->customerService->update($this->model, $customer->id, $request->toArray());
-
-        return new CustomersResource($updateCustomer);
+        $validated = $request->validate([
+            'name' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', "unique:customers,email,$customer->id"],
+            'address' => ['nullable', 'string'],
+            'building_no' => ['nullable', 'integer'],
+            'country' => ['nullable', 'string'],
+            'country_code' => ['nullable', 'string'],
+            'city' => ['nullable', 'string'],
+            'avatar' => ['nullable', 'image', 'max:1000']
+        ]);
+        $validated['address_id'] = $address;
+        return new CustomersResource($this->customerService->update($this->model, $customer->id, $validated));
     }
 
     /**
@@ -85,5 +101,58 @@ class CustomerController extends Controller
         if (!$deleteCustomer) {
             return $this->success(null, "Customer Deleted Successfully", 200);
         }
+    }
+
+    /**
+     * Customer can create new address.
+     *
+     * @return CustomersResource
+     */
+    public function newAddress(Request $request)
+    {
+        if (count(auth()->user()->address) == 7) {
+            return $this->error(null, "Maximum limit of seven addresses exceeded. Please remove any unnecessary addresses before adding a new one", 405);
+        }
+        return new CustomersResource($this->customerService->addAddress($request));
+    }
+
+    public function removeAddress(Customer $customer, $address)
+    {
+        if (count($customer->address) <= 1) {
+            return $this->error(null, 'You must have at least one address saved.', 405);
+        }
+        return $this->customerService->deleteAddress($customer, $address);
+    }
+
+    public function profile()
+    {
+        $orders = OrdersResource::collection($this->auth->order);
+        return (new CustomersResource($this->auth))->additional(['total_orders' => $orders]);
+    }
+
+    public function preferredCategory($category, $pivot)
+    {
+        $this->customerService->customerPreferences($category, $pivot);
+
+        return (new CustomersResource($this->auth))->additional([
+            'data' => [
+                'relationships' => [
+                    'category' => CategoriesResource::collection($this->auth->category)
+                ]
+            ]
+        ]);
+    }
+
+    public function preferredLang($language, $action)
+    {
+        $this->customerService->customerPreferences($language, $action);
+
+        return (new CustomersResource($this->auth))->additional([
+            'data' => [
+                'relationships' => [
+                    'language' => $this->auth->lang
+                ]
+            ]
+        ]);
     }
 }

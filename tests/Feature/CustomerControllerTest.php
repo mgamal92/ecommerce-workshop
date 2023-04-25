@@ -2,7 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
+use App\Models\Category;
 use App\Models\Customer;
+use App\Models\Language;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
@@ -34,23 +37,20 @@ class CustomerControllerTest extends TestCase
         $this->assertModelExists($customers);
     }
 
-    public function test_the_controller_create_new_customer()
-    {
-        $customer = $this->customer;
-        $response = $this->actingAs($this->user)->postJson('api/customers', [
-            'name' => 'Test Customer',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'password_confirmation' => 'password',
-        ]);
-        $response->assertStatus(201);
-        $this->assertModelExists($customer);
-    }
-
     public function test_the_controller_update_customer()
     {
         $customer = $this->customer;
-        $response = $this->actingAs($this->user)->putJson("api/customers/{$customer->id}", []);
+        $response = $this->actingAs($this->user)->putJson(route('customer.update', ['customer' => $customer->id, 'address' => 1]), [
+            'name' => 'test',
+            'address' => 'testing address',
+            'email' => 'a@a.com',
+            'address' => '',
+            'building_no' => '',
+            'country' => '',
+            'city' => '',
+            'country_code' => '',
+            'avatar' => ''
+        ]);
         $response->assertStatus(200);
         $this->assertModelExists($customer);
     }
@@ -73,5 +73,68 @@ class CustomerControllerTest extends TestCase
         $this->assertDatabaseMissing('customers', [
             'id' => $customer->id,
         ]);
+    }
+
+    public function test_the_controller_add_new_address()
+    {
+        $customer = $this->customer;
+        $response = $this->actingAs($customer, 'api-customer')->postJson(route('customer.new.address'), [
+            'address' => 'testing',
+            'building_no' => '20',
+            'country' => 'TEST',
+            'country_code' => 'test',
+            'city' => 'test'
+        ]);
+
+        $response->assertStatus(200);
+        $this->assertModelExists($customer);
+    }
+
+    public function test_the_controller_customer_can_delete_one_address()
+    {
+        $customer = $this->customer;
+        Address::factory(3)->create(['customer_id' => $customer->id]);
+        $response = $this->actingAs($customer, 'api-customer')->postJson(route('customer.delete.address', ['customer' => $customer, 'address' => 3]));
+        $response->assertSuccessful();
+    }
+
+    public function test_display_customer_profile()
+    {
+        $customer = $this->customer;
+        $response = $this->actingAs($customer)->getJson(route('customer.profile'));
+        $response->assertStatus(200);
+        $this->assertModelExists($customer);
+    }
+
+    public function test_attach_preferred_category_to_customer_account()
+    {
+        $customer = $this->customer;
+        Category::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.category', ['category' => 1, 'pivot' => 'attach']));
+        $response->assertSuccessful();
+    }
+
+    public function test_detach_preferred_category_from_customer_account()
+    {
+        $customer = $this->customer;
+        Category::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.category', ['category' => 1, 'pivot' => 'detach']));
+        $response->assertSuccessful();
+    }
+
+    public function test_customer_set_preferred_language()
+    {
+        $customer = $this->customer;
+        Language::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.lang', ['language' => 1, 'action' => 'set']));
+        $response->assertSuccessful();
+    }
+
+    public function test_customer_unset_preferred_language()
+    {
+        $customer = $this->customer;
+        Language::factory()->create();
+        $response = $this->actingAs($customer)->postJson(route('customer.preferred.lang', ['language' => 1, 'action' => 'unset']));
+        $response->assertSuccessful();
     }
 }
